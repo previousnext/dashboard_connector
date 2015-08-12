@@ -1,0 +1,142 @@
+<?php
+
+/**
+ * @file
+ * Core implementation for pnx_dashboard module.
+ */
+
+define('PNX_DASHBOARD_PERMISSION', 'administer pnx dashboard module');
+
+/**
+ * Implements hook_permission().
+ */
+function pnx_dashboard_permission() {
+  return array(
+    PNX_DASHBOARD_PERMISSION => array(
+      'title' => t('Administer pnx dashboard'),
+      'description' => t('Perform administration tasks on pnx dashboard module.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function pnx_dashboard_menu() {
+  return array(
+    'admin/config/development/pnx-dashboard' => array(
+      'title' => 'PNX Status',
+      'description' => 'Configure the PreviousNext dashboard module',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('pnx_dashboard_admin'),
+      'access arguments' => array(PNX_DASHBOARD_PERMISSION),
+      'file' => 'pnx_dashboard.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_cron().
+ */
+function pnx_dashboard_cron() {
+  global $base_url;
+
+  if ($available = update_get_available(TRUE)) {
+    module_load_include('inc', 'update', 'update.compare');
+    $modules = update_calculate_project_data($available);
+    $checks = array();
+    foreach ($modules as $module) {
+      $check = array(
+        'type' => 'Module update',
+        'pass' => _pnx_dashboard_pass($module),
+        'name' => $module['name'],
+        'message' => _pnx_dashboard_body($module),
+      );
+      $checks[] = $check;
+    }
+
+    $data = array(
+      'url' => $base_url,
+      'checks' => $checks,
+    );
+    _pnx_dashboard_push($data);
+  }
+}
+
+/**
+ * Helper function to get endpoint.
+ */
+function _pnx_dashboard_endpoint() {
+  return variable_get('pnx_dashboard_endpoint', '');
+}
+
+/**
+ * Helper function to push data to remote backend.
+ * @todo, Swap this out with Guzzle.
+ */
+function _pnx_dashboard_push($data) {
+  $endpoint = _pnx_dashboard_endpoint();
+  $ch = curl_init($endpoint);
+  $jsonDataEncoded = json_encode($data);
+  curl_setopt($ch, CURLOPT_POST, 1);
+  curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+  $result = curl_exec($ch);
+}
+
+/**
+ * Helper function to determine if a module status is a pass or a fail.
+ */
+function _pnx_dashboard_pass($module) {
+  switch ($module['status']) {
+    case UPDATE_CURRENT:
+    case UPDATE_NOT_CURRENT:
+    case UPDATE_UNKNOWN:
+      $pass = true;
+      break;
+    default:
+      $pass = false;
+      break;
+  }
+  return $pass;
+}
+
+/**
+ * Helper function to return a human readable message.
+ */
+function _pnx_dashboard_body($module) {
+  switch ($module['status']) {
+    case UPDATE_CURRENT:
+      $message = t('Up to date');
+      break;
+    case UPDATE_UNKNOWN:
+      $message = t('No available update data was found for project');
+      break;
+    case UPDATE_FETCH_PENDING:
+      $message = t('We need to (re)fetch available update data for this project');
+      break;
+    case UPDATE_NOT_FETCHED:
+      $message = t('There was a failure fetching available update data for this project');
+      break;
+    case UPDATE_NOT_SECURE:
+      $message = t('Project is missing security update(s)');
+      break;
+    case UPDATE_REVOKED:
+      $message = t('Current release has been unpublished and is no longer available');
+      break;
+    case UPDATE_NOT_CHECKED:
+      $message = t('Project status cannot be checked');
+      break;
+    case UPDATE_NOT_CURRENT:
+      $message = t('Project has a new release available, but it is not a security release');
+      break;
+    case UPDATE_NOT_SUPPORTED:
+      $message = t('Current release is no longer supported by the project maintainer.');
+      break;
+    default:
+      $message = t('Cannot determine module status');
+      break;
+  }
+  return $message;
+}

@@ -1,0 +1,3 @@
+name = Dashboard
+description = Client module for pushing to the PreviousNext Dashboard API
+core = 7.x
