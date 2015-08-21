@@ -1,3 +1,10 @@
 name = Dashboard
 description = Client module for pushing to the PreviousNext Dashboard API
 core = 7.x
+dependencies[] = ctools
+files[] = src/DashboardCheckInterface.php
+files[] = src/DashboardEntryInterface.php
+files[] = src/DashboardEntry.php
+files[] = src/DashboardEntryQueueWorker.php
+files[] = src/HttpClient.php
+files[] = src/HttpClientInterface.php

@@ -39,27 +39,22 @@ function pnx_dashboard_menu() {
  * Implements hook_cron().
  */
 function pnx_dashboard_cron() {
-  global $base_url;
-
-  if ($available = update_get_available(TRUE)) {
-    module_load_include('inc', 'update', 'update.compare');
-    $modules = update_calculate_project_data($available);
-    $checks = array();
-    foreach ($modules as $module) {
-      $check = array(
-        'type' => 'Module update',
-        'pass' => _pnx_dashboard_pass($module),
-        'name' => $module['name'],
-        'message' => _pnx_dashboard_body($module),
-      );
-      $checks[] = $check;
+  $last_run = variable_get('pnx_dashboard_last_run', 0);
+  // Don't run more than once a day.
+  if ($last_run + 86400 > REQUEST_TIME) {
+    /* @var \SystemQueue $queue */
+    $queue = \DrupalQueue::get('pnx_dashboard_send');
+    ctools_include('plugins');
+    foreach (ctools_get_plugins('pnx_dashboard',
+      'dashboard') as $id => $plugin) {
+      $class = $plugin['class'];
+      /* @var \DashboardCheckInterface $instance */
+      $instance = new $class();
+      foreach ($instance->check() as $entry) {
+        $queue->createItem($entry);
+      }
     }
-
-    $data = array(
-      'url' => $base_url,
-      'checks' => $checks,
-    );
-    _pnx_dashboard_push($data);
+    variable_set('pnx_dashboard_last_run', REQUEST_TIME);
   }
 }
 
@@ -71,72 +66,45 @@ function _pnx_dashboard_endpoint() {
 }
 
 /**
- * Helper function to push data to remote backend.
- * @todo, Swap this out with Guzzle.
+ * Implements hook_cron_queue_info().
  */
-function _pnx_dashboard_push($data) {
-  $endpoint = _pnx_dashboard_endpoint();
-  $ch = curl_init($endpoint);
-  $jsonDataEncoded = json_encode($data);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  $result = curl_exec($ch);
+function pnx_dashboard_cron_queue_info() {
+  $queues = array();
+
+  $queues['pnx_dashboard_send'] = array(
+    'worker callback' => 'pnx_dashboard_send_worker_wrapper',
+    'time' => 120,
+  );
+
+  return $queues;
 }
 
 /**
- * Helper function to determine if a module status is a pass or a fail.
+ * Implements hook_ctools_plugin_directory().
  */
-function _pnx_dashboard_pass($module) {
-  switch ($module['status']) {
-    case UPDATE_CURRENT:
-    case UPDATE_NOT_CURRENT:
-    case UPDATE_UNKNOWN:
-      $pass = true;
-      break;
-    default:
-      $pass = false;
-      break;
-  }
-  return $pass;
+function pnx_dashboard_ctools_plugin_directory($module, $type) {
+  return 'plugins/' . $type;
 }
 
 /**
- * Helper function to return a human readable message.
+ * Implements hook_ctools_plugin_type().
  */
-function _pnx_dashboard_body($module) {
-  switch ($module['status']) {
-    case UPDATE_CURRENT:
-      $message = t('Up to date');
-      break;
-    case UPDATE_UNKNOWN:
-      $message = t('No available update data was found for project');
-      break;
-    case UPDATE_FETCH_PENDING:
-      $message = t('We need to (re)fetch available update data for this project');
-      break;
-    case UPDATE_NOT_FETCHED:
-      $message = t('There was a failure fetching available update data for this project');
-      break;
-    case UPDATE_NOT_SECURE:
-      $message = t('Project is missing security update(s)');
-      break;
-    case UPDATE_REVOKED:
-      $message = t('Current release has been unpublished and is no longer available');
-      break;
-    case UPDATE_NOT_CHECKED:
-      $message = t('Project status cannot be checked');
-      break;
-    case UPDATE_NOT_CURRENT:
-      $message = t('Project has a new release available, but it is not a security release');
-      break;
-    case UPDATE_NOT_SUPPORTED:
-      $message = t('Current release is no longer supported by the project maintainer.');
-      break;
-    default:
-      $message = t('Cannot determine module status');
-      break;
-  }
-  return $message;
+function pnx_dashboard_ctools_plugin_type() {
+  return array(
+    'dashboard' => array(
+      'classes' => array('class info'),
+      'cache' => FALSE,
+      'extension' => 'php'
+    ),
+  );
+}
+
+/**
+ * Queue worker callback.
+ *
+ * @param \DashboardEntryInterface $entry
+ *   Entry to send.
+ */
+function pnx_dashboard_send_worker_wrapper(DashboardEntryInterface $entry) {
+  DashboardEntryQueueWorker::sendItem($entry, _pnx_dashboard_endpoint());
 }
