@@ -44,7 +44,7 @@ function dashboard_connector_admin() {
   ];
   $form['auth']['password'] = [
     '#title' => t('Password'),
-    '#type' => 'textfield',
+    '#type' => 'password',
     '#default_value' => variable_get('dashboard_connector_password'),
     '#description' => t('The password.'),
   ];
