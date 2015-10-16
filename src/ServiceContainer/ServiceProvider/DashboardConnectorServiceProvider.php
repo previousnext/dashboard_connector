@@ -35,9 +35,9 @@ class DashboardConnectorServiceProvider implements ServiceProviderInterface {
     ];
 
     $parameters = [
-      'dashboard_connector.base_uri' => variable_get('dashboard_base_uri', 'http://dashboard-api.previousnext.com.au'),
-      'dashboard_connector.client_id' => variable_get('dashboard_client_id', 'test_client'),
-      'dashboard_connector.site_id' => variable_get('dashboard_site_id', 'test_site'),
+      'dashboard_connector.base_uri' => variable_get('dashboard_connector_base_uri', 'https://status.previousnext.com.au'),
+      'dashboard_connector.client_id' => variable_get('dashboard_connector_client_id'),
+      'dashboard_connector.site_id' => variable_get('dashboard_connector_site_id'),
     ];
 
     return [

@@ -12,7 +12,7 @@ define('PNX_DASHBOARD_PERMISSION', 'administer pnx dashboard module');
 /**
  * Implements hook_permission().
  */
-function pnx_dashboard_permission() {
+function dashboard_connector_permission() {
   return array(
     PNX_DASHBOARD_PERMISSION => array(
       'title' => t('Administer pnx dashboard'),
@@ -24,13 +24,13 @@ function pnx_dashboard_permission() {
 /**
  * Implements hook_menu().
  */
-function pnx_dashboard_menu() {
+function dashboard_connector_menu() {
   return array(
     'admin/config/development/pnx-dashboard' => array(
       'title' => 'PNX Status',
       'description' => 'Configure the PreviousNext dashboard module',
       'page callback' => 'drupal_get_form',
-      'page arguments' => array('pnx_dashboard_admin'),
+      'page arguments' => array('dashboard_connector_admin'),
       'access arguments' => array(PNX_DASHBOARD_PERMISSION),
       'file' => 'pnx_dashboard.admin.inc',
     ),
@@ -40,14 +40,14 @@ function pnx_dashboard_menu() {
 /**
  * Implements hook_cron().
  */
-function pnx_dashboard_cron() {
-  pnx_dashboard_send();
+function dashboard_connector_cron() {
+  dashboard_connector_send();
 }
 
 /**
  * Sends check data to the PNX Dashboard.
  */
-function pnx_dashboard_send() {
+function dashboard_connector_send() {
   if ($available = update_get_available(TRUE)) {
     module_load_include('inc', 'update', 'update.compare');
     $modules = update_calculate_project_data($available);
@@ -55,9 +55,9 @@ function pnx_dashboard_send() {
     foreach ($modules as $module) {
       $check = (new Check())
         ->setName($module['name'])
-        ->setDescription(_pnx_dashboard_body($module))
+        ->setDescription(_dashboard_connector_body($module))
         ->setType('Module')
-        ->setAlertLevel(_pnx_dashboard_update_alert_level($module));
+        ->setAlertLevel(_dashboard_connector_update_alert_level($module));
       $checks[] = $check;
     }
     \Drupal::service('dashboard_connector.client')->send($checks);
@@ -67,7 +67,7 @@ function pnx_dashboard_send() {
 /**
  * Helper function to determine if a module status is a pass or a fail.
  */
-function _pnx_dashboard_update_alert_level($module) {
+function _dashboard_connector_update_alert_level($module) {
   switch ($module['status']) {
     case UPDATE_NOT_CURRENT:
       $alert_level = Check::ALERT_WARNING;
@@ -89,7 +89,7 @@ function _pnx_dashboard_update_alert_level($module) {
 /**
  * Helper function to return a human readable message.
  */
-function _pnx_dashboard_body($module) {
+function _dashboard_connector_body($module) {
   switch ($module['status']) {
     case UPDATE_CURRENT:
       $message = t('Up to date');

@@ -1,5 +1,5 @@
 {
-  "name": "previousnext/dashboard-connector",
+  "name": "previousnext/dashboard_connector",
   "description": "A Dashboard API connector module",
   "type": "drupal-module",
   "license": "proprietary",
