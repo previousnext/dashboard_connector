@@ -32,12 +32,22 @@ class DashboardConnectorServiceProvider implements ServiceProviderInterface {
 
     $services['dashboard_connector.client'] = [
       'class' => '\GuzzleHttp\Client',
+      'arguments' => [
+        [
+          'auth' => [
+            '%dashboard_connector.username%',
+            '%dashboard_connector.password%'
+          ]
+        ]
+      ],
     ];
 
     $parameters = [
       'dashboard_connector.base_uri' => variable_get('dashboard_connector_base_uri', 'https://status.previousnext.com.au'),
       'dashboard_connector.client_id' => variable_get('dashboard_connector_client_id'),
       'dashboard_connector.site_id' => variable_get('dashboard_connector_site_id'),
+      'dashboard_connector.username' => variable_get('dashboard_connector_username'),
+      'dashboard_connector.password' => variable_get('dashboard_connector_password'),
     ];
 
     return [
