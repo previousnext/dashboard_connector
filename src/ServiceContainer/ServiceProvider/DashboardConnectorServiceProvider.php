@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\dashboard_connector\ServiceContainer\ServiceProvider\DashboardConnectorServiceProvider
+ * Contains DashboardConnectorServiceProvider
  */
 
 namespace Drupal\dashboard_connector\ServiceContainer\ServiceProvider;
