@@ -25,7 +25,7 @@ function dashboard_connector_admin() {
   $form['dashboard_connector_site_id'] = [
     '#title' => t('Site ID'),
     '#type' => 'textfield',
-    '#default_value' => variable_get('dashboard_connector_client_id'),
+    '#default_value' => variable_get('dashboard_connector_site_id'),
     '#description' => t('The unique site ID for this site (provided by PreviousNext).'),
   ];
 
@@ -36,13 +36,13 @@ function dashboard_connector_admin() {
     '#collapsible' => TRUE,
     '#collapsed' => TRUE,
   ];
-  $form['auth']['username'] = [
+  $form['auth']['dashboard_connector_username'] = [
     '#title' => t('Username'),
     '#type' => 'textfield',
     '#default_value' => variable_get('dashboard_connector_username'),
     '#description' => t('The username.'),
   ];
-  $form['auth']['password'] = [
+  $form['auth']['dashboard_connector_password'] = [
     '#title' => t('Password'),
     '#type' => 'password',
     '#default_value' => variable_get('dashboard_connector_password'),
