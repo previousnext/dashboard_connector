@@ -30,7 +30,7 @@ class DashboardConnectorServiceProvider implements ServiceProviderInterface {
       ]
     ];
 
-    $services['dashboard_connector.client'] = [
+    $services['dashboard_connector.http_client'] = [
       'class' => '\GuzzleHttp\Client',
       'arguments' => [
         [
@@ -52,7 +52,7 @@ class DashboardConnectorServiceProvider implements ServiceProviderInterface {
 
     return [
       'parameters' => $parameters,
-      'service' => $services,
+      'services' => $services,
     ];
   }
 
