@@ -1,0 +1,164 @@
+<?php
+
+/**
+ * @file
+ * Core implementation for pnx_dashboard module.
+ */
+
+use PNX\Dashboard\Check;
+
+define('DASHBOARD_CONNECTOR_ADMIN_PERMISSION', 'administer pnx dashboard module');
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function dashboard_connector_ctools_plugin_directory($owner, $plugin_type) {
+  if ($owner == 'service_container') {
+    return 'src/ServiceContainer/' . $plugin_type;
+  }
+  return NULL;
+}
+
+/**
+ * Implements drupal_alter().
+ *
+ * @param array $container_definition
+ *   The fully build container definition that can be altered by modules now.
+ */
+function dashboard_connector_service_container_container_build_alter(&$container_definition) {
+  $container_definition['parameters']['dashboard_connector.base_uri'] = variable_get('dashboard_connector_base_uri', 'https://status.previousnext.com.au');
+  $container_definition['parameters']['dashboard_connector.client_id'] = variable_get('dashboard_connector_client_id');
+  $container_definition['parameters']['dashboard_connector.site_id'] = variable_get('dashboard_connector_site_id');
+  $container_definition['parameters']['dashboard_connector.username'] = variable_get('dashboard_connector_username');
+  $container_definition['parameters']['dashboard_connector.password'] = variable_get('dashboard_connector_password');
+}
+
+/**
+ * Implements hook_permission().
+ */
+function dashboard_connector_permission() {
+  return array(
+    DASHBOARD_CONNECTOR_ADMIN_PERMISSION => array(
+      'title' => t('Administer pnx dashboard'),
+      'description' => t('Perform administration tasks on pnx dashboard module.'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function dashboard_connector_menu() {
+  return array(
+    'admin/config/development/pnx-dashboard' => array(
+      'title' => 'PNX Status',
+      'description' => 'Configure the PreviousNext dashboard module',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('dashboard_connector_admin'),
+      'access arguments' => array(DASHBOARD_CONNECTOR_ADMIN_PERMISSION),
+      'file' => 'dashboard_connector.admin.inc',
+    ),
+  );
+}
+
+/**
+ * Implements hook_cron().
+ */
+function dashboard_connector_cron() {
+  dashboard_connector_send();
+}
+
+/**
+ * Sends check data to the PNX Dashboard.
+ */
+function dashboard_connector_send() {
+  if ($available = update_get_available(TRUE)) {
+    module_load_include('inc', 'update', 'update.compare');
+    $modules = update_calculate_project_data($available);
+    $checks = array();
+    foreach ($modules as $module) {
+      $check = (new Check())
+        ->setName($module['name'])
+        ->setDescription(_dashboard_connector_body($module))
+        ->setType('Module')
+        ->setAlertLevel(_dashboard_connector_update_alert_level($module));
+      if ($module['name'] === 'drupal') {
+        $check->setType('core');
+      }
+      $checks[] = $check;
+    }
+    /* @var \PNX\Dashboard\DashboardClientInterface $client */
+    $client = \Drupal::service('dashboard_connector.client');
+    $client->send($checks);
+  }
+}
+
+/**
+ * Helper function to determine if a module status is a pass or a fail.
+ */
+function _dashboard_connector_update_alert_level($module) {
+  switch ($module['status']) {
+    case UPDATE_NOT_CURRENT:
+      $alert_level = Check::ALERT_WARNING;
+      break;
+
+    case UPDATE_NOT_SECURE:
+    case UPDATE_NOT_SUPPORTED:
+    case UPDATE_REVOKED:
+      $alert_level = Check::ALERT_ERROR;
+      break;
+
+    default:
+      $alert_level = Check::ALERT_NOTICE;
+      break;
+  }
+  return $alert_level;
+}
+
+/**
+ * Helper function to return a human readable message.
+ */
+function _dashboard_connector_body($module) {
+  switch ($module['status']) {
+    case UPDATE_CURRENT:
+      $message = t('Up to date');
+      break;
+
+    case UPDATE_UNKNOWN:
+      $message = t('No available update data was found for project');
+      break;
+
+    case UPDATE_FETCH_PENDING:
+      $message = t('We need to (re)fetch available update data for this project');
+      break;
+
+    case UPDATE_NOT_FETCHED:
+      $message = t('There was a failure fetching available update data for this project');
+      break;
+
+    case UPDATE_NOT_SECURE:
+      $message = t('Project is missing security update(s)');
+      break;
+
+    case UPDATE_REVOKED:
+      $message = t('Current release has been unpublished and is no longer available');
+      break;
+
+    case UPDATE_NOT_CHECKED:
+      $message = t('Project status cannot be checked');
+      break;
+
+    case UPDATE_NOT_CURRENT:
+      $message = t('Project has a new release available, but it is not a security release');
+      break;
+
+    case UPDATE_NOT_SUPPORTED:
+      $message = t('Current release is no longer supported by the project maintainer.');
+      break;
+
+    default:
+      $message = t('Cannot determine module status');
+      break;
+  }
+  return $message;
+}

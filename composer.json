@@ -1,0 +1,32 @@
+{
+  "name": "previousnext/dashboard_connector",
+  "description": "A Dashboard API connector module",
+  "type": "drupal-module",
+  "license": "proprietary",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "Kim Pepper",
+      "email": "kim@previousnext.com.au"
+    },
+    {
+      "name": "Lee Rowlands",
+      "email": "lee@previousnext.com.au"
+    }
+  ],
+  "require": {
+    "previousnext/dashboard-lib": "dev-master"
+  },
+  "config": {
+    "github-oauth": {
+      "github.com": "46b824549222e8f9883ba0fc9741fa8b363e1f37"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "git@github.com:previousnext/dashboard-lib.git"
+    }
+  ]
+}
