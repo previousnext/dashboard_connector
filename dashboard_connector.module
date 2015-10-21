@@ -65,7 +65,9 @@ function dashboard_connector_menu() {
  * Implements hook_cron().
  */
 function dashboard_connector_cron() {
-  dashboard_connector_send();
+  if (variable_get('dashboard_connector_enabled', FALSE) === TRUE) {
+    dashboard_connector_send();
+  }
 }
 
 /**
