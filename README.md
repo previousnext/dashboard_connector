@@ -9,7 +9,7 @@ The following modules are required:
 
 * ctools
 * service_container
-* registry autoload
+* registry_autoload
 
 In addition, the dashboard-lib PHP library needs to be available and registered
 with an autoloader.

@@ -19,16 +19,6 @@ class DashboardConnectorServiceProvider implements ServiceProviderInterface {
    */
   public function getContainerDefinition() {
     $services = [];
-    // Dashboard Client.
-    $services['dashboard_connector.client'] = [
-      'class' => '\PNX\Dashboard\DashboardClient',
-      'arguments' => [
-        '@dashboard_connector.http_client',
-        '%dashboard_connector.base_uri%',
-        '%dashboard_connector.client_id%',
-        '%dashboard_connector.site_id%',
-      ]
-    ];
 
     $services['dashboard_connector.http_client'] = [
       'class' => '\GuzzleHttp\Client',
@@ -40,6 +30,25 @@ class DashboardConnectorServiceProvider implements ServiceProviderInterface {
           ]
         ]
       ],
+    ];
+
+    $services['logger.channel.dashboard_connector'] = [
+      'class' => 'Drupal\service_container\Logger\LoggerChannel',
+      'factory_service' => 'logger.factory',
+      'factory_method' => 'get',
+      'arguments' => ['dashboard_connector'],
+    ];
+
+    // Dashboard Client.
+    $services['dashboard_connector.client'] = [
+      'class' => '\PNX\Dashboard\DashboardClient',
+      'arguments' => [
+        '@dashboard_connector.http_client',
+        '%dashboard_connector.base_uri%',
+        '%dashboard_connector.client_id%',
+        '%dashboard_connector.site_id%',
+        '@logger.channel.dashboard_connector'
+      ]
     ];
 
     $parameters = [
