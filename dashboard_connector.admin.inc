@@ -10,6 +10,13 @@
  */
 function dashboard_connector_admin() {
   $form = [];
+
+  $form['dashboard_connector_enabled'] = [
+    '#title' => t('Enabled'),
+    '#description' => t('Enable to send checks to the Dashboard service.'),
+    '#type' => 'checkbox',
+    '#default_value' => variable_get('dashboard_connector_enabled', FALSE),
+  ];
   $form['dashboard_connector_base_uri'] = [
     '#title' => t('Base URI'),
     '#type' => 'textfield',
