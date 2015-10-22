@@ -51,7 +51,7 @@ function dashboard_connector_permission() {
 function dashboard_connector_menu() {
   return array(
     'admin/config/development/pnx-dashboard' => array(
-      'title' => 'PNX Status',
+      'title' => 'PNX Status Dashboard Connector',
       'description' => 'Configure the PreviousNext dashboard module',
       'page callback' => 'drupal_get_form',
       'page arguments' => array('dashboard_connector_admin'),
