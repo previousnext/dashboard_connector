@@ -13,7 +13,6 @@ function dashboard_connector_requirements($phase) {
   // Ensure translations don't break at install time.
   $t = get_t();
 
-
   $requirements['dashboard_connector_libraries'] = [
     'title' => $t('Dashboard Connector client library'),
     'value' => $t('Installed'),
