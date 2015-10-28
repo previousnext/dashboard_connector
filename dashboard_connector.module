@@ -5,8 +5,6 @@
  * Core implementation for pnx_dashboard module.
  */
 
-use PNX\Dashboard\Check;
-
 define('DASHBOARD_CONNECTOR_ADMIN_PERMISSION', 'administer pnx dashboard module');
 
 /**
