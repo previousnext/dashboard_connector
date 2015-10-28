@@ -21,7 +21,7 @@ function dashboard_connector_admin() {
     '#title' => t('Base URI'),
     '#type' => 'textfield',
     '#default_value' => variable_get('dashboard_connector_base_uri'),
-    '#description' => t('The base URI for the Dashboard API (e.g. https://status.previousnext.com.au/'),
+    '#description' => t('The base URI for the Dashboard API (e.g. https://status.previousnext.com.au/)'),
   ];
   $form['dashboard_connector_client_id'] = [
     '#title' => t('Client ID'),
@@ -56,4 +56,19 @@ function dashboard_connector_admin() {
     '#description' => t('The password.'),
   ];
   return system_settings_form($form);
+}
+
+/**
+ * Form validation handler for dashboard_connector_admin.
+ */
+function dashboard_connector_admin_validate($form, &$form_state) {
+  // Ensure whitespace is trimmed.
+  $keys = [
+    'dashboard_connector_base_uri',
+    'dashboard_connector_client_id',
+    'dashboard_connector_site_id'
+  ];
+  foreach ($keys as $key) {
+    $form_state['values'][$key] = trim($form_state['values'][$key]);
+  }
 }
