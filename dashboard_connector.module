@@ -12,11 +12,24 @@ define('DASHBOARD_CONNECTOR_ADMIN_PERMISSION', 'administer pnx dashboard module'
 /**
  * Implements hook_ctools_plugin_directory().
  */
-function dashboard_connector_ctools_plugin_directory($owner, $plugin_type) {
-  if ($owner == 'service_container') {
-    return 'src/ServiceContainer/' . $plugin_type;
+function dashboard_connector_ctools_plugin_directory($module, $type) {
+  if ($module == 'dashboard_connector') {
+    return 'src/Dashboard/' . $type;
   }
-  return NULL;
+  if ($module == 'service_container') {
+    return 'src/ServiceContainer/' . $type;
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_type().
+ */
+function dashboard_connector_ctools_plugin_type() {
+  return [
+    'Checker' => [
+      'cache' => FALSE,
+    ],
+  ];
 }
 
 /**
@@ -76,93 +89,16 @@ function dashboard_connector_cron() {
  * Sends check data to the PNX Dashboard.
  */
 function dashboard_connector_send() {
-  if ($available = update_get_available(TRUE)) {
-    module_load_include('inc', 'update', 'update.compare');
-    $modules = update_calculate_project_data($available);
-    $checks = array();
-    foreach ($modules as $module) {
-      $check = (new Check())
-        ->setName($module['name'])
-        ->setDescription(_dashboard_connector_body($module))
-        ->setType('Module')
-        ->setAlertLevel(_dashboard_connector_update_alert_level($module));
-      if ($module['name'] === 'drupal') {
-        $check->setType('core');
-      }
-      $checks[] = $check;
-    }
-    /* @var \PNX\Dashboard\DashboardClientInterface $client */
-    $client = \Drupal::service('dashboard_connector.client');
-    $client->send($checks);
+  $checks = [];
+  // Collect checks from plugins.
+  ctools_include('plugins');
+  foreach (ctools_get_plugins('dashboard_connector', 'Checker') as $id => $plugin) {
+    $class = $plugin['class'];
+    /* @var \Drupal\dashboard_connector\Dashboard\Checker\CheckerInterface $instance */
+    $instance = new $class();
+    $checks += $instance->getChecks();
   }
-}
-
-/**
- * Helper function to determine if a module status is a pass or a fail.
- */
-function _dashboard_connector_update_alert_level($module) {
-  switch ($module['status']) {
-    case UPDATE_NOT_CURRENT:
-      $alert_level = Check::ALERT_WARNING;
-      break;
-
-    case UPDATE_NOT_SECURE:
-    case UPDATE_NOT_SUPPORTED:
-    case UPDATE_REVOKED:
-      $alert_level = Check::ALERT_ERROR;
-      break;
-
-    default:
-      $alert_level = Check::ALERT_NOTICE;
-      break;
-  }
-  return $alert_level;
-}
-
-/**
- * Helper function to return a human readable message.
- */
-function _dashboard_connector_body($module) {
-  switch ($module['status']) {
-    case UPDATE_CURRENT:
-      $message = t('Up to date');
-      break;
-
-    case UPDATE_UNKNOWN:
-      $message = t('No available update data was found for project');
-      break;
-
-    case UPDATE_FETCH_PENDING:
-      $message = t('We need to (re)fetch available update data for this project');
-      break;
-
-    case UPDATE_NOT_FETCHED:
-      $message = t('There was a failure fetching available update data for this project');
-      break;
-
-    case UPDATE_NOT_SECURE:
-      $message = t('Project is missing security update(s)');
-      break;
-
-    case UPDATE_REVOKED:
-      $message = t('Current release has been unpublished and is no longer available');
-      break;
-
-    case UPDATE_NOT_CHECKED:
-      $message = t('Project status cannot be checked');
-      break;
-
-    case UPDATE_NOT_CURRENT:
-      $message = t('Project has a new release available, but it is not a security release');
-      break;
-
-    case UPDATE_NOT_SUPPORTED:
-      $message = t('Current release is no longer supported by the project maintainer.');
-      break;
-
-    default:
-      $message = t('Cannot determine module status');
-      break;
-  }
-  return $message;
+  /* @var \PNX\Dashboard\DashboardClientInterface $client */
+  $client = \Drupal::service('dashboard_connector.client');
+  $client->send($checks);
 }
