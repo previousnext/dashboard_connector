@@ -96,7 +96,7 @@ function dashboard_connector_send() {
     $class = $plugin['class'];
     /* @var \Drupal\dashboard_connector\Dashboard\Checker\CheckerInterface $instance */
     $instance = new $class();
-    $checks += $instance->getChecks();
+    $checks = array_merge($checks, $instance->getChecks());
   }
   /* @var \PNX\Dashboard\DashboardClientInterface $client */
   $client = \Drupal::service('dashboard_connector.client');
