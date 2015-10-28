@@ -71,5 +71,4 @@ function dashboard_connector_admin_validate($form, &$form_state) {
   foreach ($keys as $key) {
     $form_state['values'][$key] = trim($form_state['values'][$key]);
   }
-  $form_state['values']['dashboard_connector_base_uri'] = trim($form_state['values']['dashboard_connector_base_uri']);
 }
