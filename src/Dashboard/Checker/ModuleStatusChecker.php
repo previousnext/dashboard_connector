@@ -27,9 +27,10 @@ class ModuleStatusChecker implements CheckerInterface {
       foreach ($modules as $module) {
         $check = (new Check())
           ->setName($module['name'])
-          ->setDescription($this->getDescription($module))
+          ->setDescription($this->getDescription($module['status']))
           ->setType('Module')
-          ->setAlertLevel($this->getAlertLevel($module));
+          ->setAlertLevel($this->getAlertLevel($module['status']));
+        // Special case core updates.
         if ($module['name'] === 'drupal') {
           $check->setType('core');
         }
@@ -42,14 +43,14 @@ class ModuleStatusChecker implements CheckerInterface {
   /**
    * Determine the module status alert level.
    *
-   * @param array $module
-   *   The module info.
+   * @param string $status
+   *   The module status.
    *
    * @return string
    *   The alert level.
    */
-  protected function getAlertLevel(array $module) {
-    switch ($module['status']) {
+  protected function getAlertLevel($status) {
+    switch ($status) {
       case UPDATE_NOT_CURRENT:
         $alert_level = Check::ALERT_WARNING;
         break;
@@ -70,14 +71,14 @@ class ModuleStatusChecker implements CheckerInterface {
   /**
    * Provide a human readable description.
    *
-   * @param array $module
-   *   The module info.
+   * @param string $status
+   *   The module status.
    *
    * @return string
    *   The check message.
    */
-  protected function getDescription($module) {
-    switch ($module['status']) {
+  protected function getDescription($status) {
+    switch ($status) {
       case UPDATE_CURRENT:
         $message = t('Up to date');
         break;
