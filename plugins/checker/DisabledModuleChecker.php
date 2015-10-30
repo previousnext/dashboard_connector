@@ -2,11 +2,8 @@
 
 /**
  * @file
- * Contains Drupal\dashboard_connector\Dashboard\Checker\DisabledModuleChecker
+ * Contains DisabledModuleChecker
  */
-
-namespace Drupal\dashboard_connector\Dashboard\Checker;
-use PNX\Dashboard\Check;
 
 /**
  * Checks for modules which should be disabled.

@@ -2,10 +2,8 @@
 
 /**
  * @file
- * Contains \Drupal\dashboard_connector\Dashboard\Checker\ModuleStatusChecker
+ * Contains ModuleStatusChecker
  */
-
-namespace Drupal\dashboard_connector\Dashboard\Checker;
 
 /**
  * Provides a module status checker.

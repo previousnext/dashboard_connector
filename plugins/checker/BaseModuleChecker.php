@@ -5,8 +5,6 @@
  * Contains Drupal\dashboard_connector\Dashboard\Checker\BaseModuleChecker
  */
 
-namespace Drupal\dashboard_connector\Dashboard\Checker;
-
 /**
  * Provides a base class for module checkers.
  */

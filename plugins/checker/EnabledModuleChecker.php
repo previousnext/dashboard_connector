@@ -2,10 +2,8 @@
 
 /**
  * @file
- * Contains Drupal\dashboard_connector\Dashboard\Checker\EnabledModuleChecker
+ * Contains EnabledModuleChecker
  */
-
-namespace Drupal\dashboard_connector\Dashboard\Checker;
 
 /**
  * Checker for modules which should be enabled.

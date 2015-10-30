@@ -52,16 +52,16 @@ function dashboard_connector_admin() {
   $form['auth']['dashboard_connector_password'] = array(
     '#title' => t('Password'),
     '#type' => 'password',
-    '#default_value' => variable_get('dashboard_connector_password'),
     '#description' => t('The password.'),
   );
+  $form['#submit'][] = 'dashboard_connector_admin_submit';
   return system_settings_form($form);
 }
 
 /**
  * Form validation handler for dashboard_connector_admin.
  */
-function dashboard_connector_admin_validate($form, &$form_state) {
+function dashboard_connector_admin_submit($form, &$form_state) {
   // Ensure whitespace is trimmed.
   $keys = array(
     'dashboard_connector_base_uri',
@@ -70,5 +70,9 @@ function dashboard_connector_admin_validate($form, &$form_state) {
   );
   foreach ($keys as $key) {
     $form_state['values'][$key] = trim($form_state['values'][$key]);
+  }
+  // Don't save blank passwords.
+  if (empty($form_state['values']['dashboard_connector_password'])) {
+    unset($form_state['values']['dashboard_connector_password']);
   }
 }
