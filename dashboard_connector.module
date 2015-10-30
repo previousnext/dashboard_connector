@@ -93,18 +93,19 @@ function dashboard_connector_send() {
  */
 function _dashboard_connector_do_send($snapshot) {
   $url = variable_get('dashboard_connector_base_uri', 'https://status.previousnext.com.au/') . 'snapshots';
-  $json = json_encode($snapshot);
-
   $username = variable_get('dashboard_connector_username');
   $password = variable_get('dashboard_connector_password');
-  $response = drupal_http_request($url, array(
+
+  $json = json_encode($snapshot);
+  $options = array(
     'headers' => array(
       'Content-Type' => 'application/json',
       'Authorization' => 'Basic ' . base64_encode("$username:$password"),
     ),
     'data' => $json,
     'method' => 'POST',
-  ));
+  );
+  $response = drupal_http_request($url, $options);
 
   if ($response->code != 204) {
     watchdog('dashboard_connector', 'Failed sending snapshot', array(), WATCHDOG_ERROR);
