@@ -41,7 +41,7 @@ abstract class BaseModuleChecker implements CheckerInterface {
   public function getChecks() {
     $checks = [];
     foreach ($this->getModulesToCheck() as $module => $alert_level) {
-      if (module_exists($module) === $this->getExpectedModuleState()) {
+      if (module_exists($module) !== $this->getExpectedModuleState()) {
         $check = (new Check())
           ->setType($this->getType())
           ->setName($module)
@@ -63,7 +63,7 @@ abstract class BaseModuleChecker implements CheckerInterface {
    *   The message.
    */
   protected function getMessage($module) {
-    return t('!module module is !state enabled', [
+    return t('!module module is !stateenabled', [
       '!module' => $module,
       '!state' => $this->getExpectedModuleState() ? 'not ' : '',
     ]);
