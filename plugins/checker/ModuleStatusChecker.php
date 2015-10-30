@@ -2,12 +2,8 @@
 
 /**
  * @file
- * Contains \Drupal\dashboard_connector\Dashboard\Checker\ModuleStatusChecker
+ * Contains ModuleStatusChecker
  */
-
-namespace Drupal\dashboard_connector\Dashboard\Checker;
-
-use PNX\Dashboard\Check;
 
 /**
  * Provides a module status checker.
@@ -18,21 +14,22 @@ class ModuleStatusChecker implements CheckerInterface {
    * {@inheritdoc}
    */
   public function getChecks() {
-    $checks = [];
+    $checks = array();
     if ($available = update_get_available(TRUE)) {
       module_load_include('inc', 'update', 'update.compare');
 
       $modules = update_calculate_project_data($available);
       $checks = array();
       foreach ($modules as $module) {
-        $check = (new Check())
-          ->setName($module['name'])
-          ->setDescription($this->getDescription($module['status']))
-          ->setType('Module')
-          ->setAlertLevel($this->getAlertLevel($module['status']));
+        $check = array(
+          'name' => $module['name'],
+          'description' => $this->getDescription($module['status']),
+          'type' => 'module',
+          'alert_level' => $this->getAlertLevel($module['status']),
+        );
         // Special case core updates.
         if ($module['name'] === 'drupal') {
-          $check->setType('core');
+          $check['type'] = 'core';
         }
         $checks[] = $check;
       }
@@ -52,17 +49,17 @@ class ModuleStatusChecker implements CheckerInterface {
   protected function getAlertLevel($status) {
     switch ($status) {
       case UPDATE_NOT_CURRENT:
-        $alert_level = Check::ALERT_WARNING;
+        $alert_level = 'warning';
         break;
 
       case UPDATE_NOT_SECURE:
       case UPDATE_NOT_SUPPORTED:
       case UPDATE_REVOKED:
-        $alert_level = Check::ALERT_ERROR;
+        $alert_level = 'error';
         break;
 
       default:
-        $alert_level = Check::ALERT_NOTICE;
+        $alert_level = 'notice';
         break;
     }
     return $alert_level;

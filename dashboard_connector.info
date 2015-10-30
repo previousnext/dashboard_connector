@@ -5,7 +5,9 @@ core = 7.x
 configure = admin/config/development/pnx-dashboard
 
 dependencies[] = ctools
-dependencies[] = registry_autoload
-dependencies[] = service_container
 
-registry_autoload[] = PSR-4
+files[] = plugins/checker/BaseModuleChecker.php
+files[] = plugins/checker/CheckerInterface.php
+files[] = plugins/checker/DisabledModuleChecker.php
+files[] = plugins/checker/EnabledModuleChecker.php
+files[] = plugins/checker/ModuleStatusChecker.php

@@ -2,20 +2,17 @@
 
 /**
  * @file
- * Contains Drupal\dashboard_connector\Dashboard\Checker\DisabledModuleChecker
+ * Contains DisabledModuleChecker
  */
-
-namespace Drupal\dashboard_connector\Dashboard\Checker;
-use PNX\Dashboard\Check;
 
 /**
  * Checks for modules which should be disabled.
  */
 class DisabledModuleChecker extends BaseModuleChecker {
 
-  protected $modules = [
-    'views_ui' => Check::ALERT_WARNING
-  ];
+  protected $modules = array(
+    'views_ui' => 'warning',
+  );
 
   /**
    * {@inheritdoc}
