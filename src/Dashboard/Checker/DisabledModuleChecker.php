@@ -13,9 +13,9 @@ use PNX\Dashboard\Check;
  */
 class DisabledModuleChecker extends BaseModuleChecker {
 
-  protected $modules = [
-    'views_ui' => Check::ALERT_WARNING
-  ];
+  protected $modules = array(
+    'views_ui' => 'warning',
+  );
 
   /**
    * {@inheritdoc}

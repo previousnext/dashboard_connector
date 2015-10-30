@@ -7,8 +7,6 @@
 
 namespace Drupal\dashboard_connector\Dashboard\Checker;
 
-use PNX\Dashboard\Check;
-
 /**
  * Provides a base class for module checkers.
  */
@@ -17,7 +15,7 @@ abstract class BaseModuleChecker implements CheckerInterface {
   /**
    * @var array
    */
-  protected $modules = [];
+  protected $modules = array();
 
   /**
    * Gets the check type.
@@ -39,14 +37,15 @@ abstract class BaseModuleChecker implements CheckerInterface {
    * {@inheritdoc}
    */
   public function getChecks() {
-    $checks = [];
+    $checks = array();
     foreach ($this->getModulesToCheck() as $module => $alert_level) {
       if (module_exists($module) !== $this->getExpectedModuleState()) {
-        $check = (new Check())
-          ->setType($this->getType())
-          ->setName($module)
-          ->setDescription($this->getMessage($module))
-          ->setAlertLevel($alert_level);
+        $check = array(
+          'type' => $this->getType(),
+          'name' => $module,
+          'description' => $this->getMessage($module),
+          'alert_level' => $alert_level,
+        );
         $checks[] = $check;
       }
     }
@@ -63,10 +62,10 @@ abstract class BaseModuleChecker implements CheckerInterface {
    *   The message.
    */
   protected function getMessage($module) {
-    return t('!module module is !stateenabled', [
+    return t('!module module is !stateenabled', array(
       '!module' => $module,
       '!state' => $this->getExpectedModuleState() ? 'not ' : '',
-    ]);
+    ));
   }
 
   /**

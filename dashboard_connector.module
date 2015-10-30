@@ -87,7 +87,7 @@ function dashboard_connector_cron() {
  * Sends check data to the PNX Dashboard.
  */
 function dashboard_connector_send() {
-  $checks = [];
+  $checks = array();
   // Collect checks from plugins.
   ctools_include('plugins');
   foreach (ctools_get_plugins('dashboard_connector', 'Checker') as $id => $plugin) {
@@ -96,7 +96,34 @@ function dashboard_connector_send() {
     $instance = new $class();
     $checks = array_merge($checks, $instance->getChecks());
   }
-  /* @var \PNX\Dashboard\DashboardClientInterface $client */
-  $client = \Drupal::service('dashboard_connector.client');
-  $client->send($checks);
+  $snapshot = array(
+    'timestamp' => (new \DateTime())->format(\DateTime::ISO8601),
+    'client_id' => variable_get('dashboard_connector_client_id'),
+    'site_id' => variable_get('dashboard_connector_site_id'),
+    'checks' => $checks,
+  );
+  _dashboard_connector_do_send($snapshot);
+}
+
+/**
+ * Do the actual sending.
+ */
+function _dashboard_connector_do_send($snapshot) {
+  $url = variable_get('dashboard_connector_base_uri', 'https://status.previousnext.com.au/') . 'snapshots';
+  $json = json_encode($snapshot);
+
+  $username = variable_get('dashboard_connector_username');
+  $password = variable_get('dashboard_connector_password');
+  $response = drupal_http_request($url, array(
+    'headers' => array(
+      'Content-Type' => 'application/json',
+      'Authorization' => 'Basic ' . base64_encode("$username:$password"),
+    ),
+    'data' => $json,
+    'method' => 'POST',
+  ));
+
+  if (!$response['code'] == 204) {
+    watchdog('dashboard_connector', 'Failed sending snapshot', array(), WATCHDOG_ERROR);
+  }
 }

@@ -7,16 +7,14 @@
 
 namespace Drupal\dashboard_connector\Dashboard\Checker;
 
-use PNX\Dashboard\Check;
-
 /**
  * Checker for modules which should be enabled.
  */
 class EnabledModuleChecker extends BaseModuleChecker {
 
-  protected $modules = [
-    'paranoia' => Check::ALERT_ERROR
-  ];
+  protected $modules = array(
+    'paranoia' => 'error',
+  );
 
   /**
    * {@inheritdoc}

@@ -5,7 +5,3 @@ core = 7.x
 configure = admin/config/development/pnx-dashboard
 
 dependencies[] = ctools
-dependencies[] = registry_autoload
-dependencies[] = service_container
-
-registry_autoload[] = PSR-4

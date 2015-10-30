@@ -9,15 +9,15 @@
  * Implements hook_requirements().
  */
 function dashboard_connector_requirements($phase) {
-  $requirements = [];
+  $requirements = array();
   // Ensure translations don't break at install time.
   $t = get_t();
 
-  $requirements['dashboard_connector_libraries'] = [
+  $requirements['dashboard_connector_libraries'] = array(
     'title' => $t('Dashboard Connector client library'),
     'value' => $t('Installed'),
     'severity' => REQUIREMENT_OK,
-  ];
+  );
 
   if (!class_exists('\PNX\Dashboard\DashboardClient')) {
     $requirements['dashboard_connector_foo']['value'] = $t('Not installed. See README for installation instructions.');
