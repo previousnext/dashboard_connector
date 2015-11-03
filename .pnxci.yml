@@ -1,0 +1,26 @@
+channel: "#dashboard"
+
+config:
+  mem_application: 128
+
+application: previousnext/php5.5
+
+sync_setup: &sync_setup
+  # Setup the remote repository.
+  - git remote add drupal pnx-bot@git.drupal.org:project/dashboard_connector.git
+  - git fetch drupal
+  - git config --global user.email "admin@previousnext.com.au"
+  - git config --global user.name "PreviousNext"
+
+sync_teardown: &sync_teardown
+  # Remove the remote repository.
+  - git remote remove drupal
+
+sync_7_1:
+  setup: *sync_setup
+  steps:
+    # Update local build before we do anything else.
+    - git rebase drupal/7.x-1.x
+    # Push changes to Drupal.org.
+    - git push drupal 7.x-1.x
+  teardown: *sync_teardown
