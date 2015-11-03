@@ -14,10 +14,5 @@
       "name": "Lee Rowlands",
       "email": "lee@previousnext.com.au"
     }
-  ],
-  "config": {
-    "github-oauth": {
-      "github.com": "46b824549222e8f9883ba0fc9741fa8b363e1f37"
-    }
-  }
+  ]
 }
