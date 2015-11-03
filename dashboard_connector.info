@@ -5,6 +5,7 @@ core = 7.x
 configure = admin/config/development/pnx-dashboard
 
 dependencies[] = ctools
+dependencies[] = update
 
 files[] = plugins/checker/BaseModuleChecker.php
 files[] = plugins/checker/CheckerInterface.php
