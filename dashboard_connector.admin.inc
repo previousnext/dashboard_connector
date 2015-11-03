@@ -21,7 +21,7 @@ function dashboard_connector_admin() {
     '#title' => t('Base URI'),
     '#type' => 'textfield',
     '#default_value' => variable_get('dashboard_connector_base_uri'),
-    '#description' => t('The base URI for the Dashboard API (e.g. https://status.previousnext.com.au/)'),
+    '#description' => t('The base URI for the Dashboard API.'),
   );
   $form['dashboard_connector_client_id'] = array(
     '#title' => t('Client ID'),
