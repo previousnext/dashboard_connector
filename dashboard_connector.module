@@ -20,11 +20,11 @@ function dashboard_connector_ctools_plugin_directory($module, $type) {
  * Implements hook_ctools_plugin_type().
  */
 function dashboard_connector_ctools_plugin_type() {
-  return [
-    'checker' => [
+  return array(
+    'checker' => array(
       'cache' => FALSE,
-    ],
-  ];
+    ),
+  );
 }
 
 /**
@@ -80,7 +80,7 @@ function dashboard_connector_send() {
     $checks = array_merge($checks, $instance->getChecks());
   }
   $snapshot = array(
-    'timestamp' => (new \DateTime())->format(\DateTime::ISO8601),
+    'timestamp' => date(DateTime::ISO8601),
     'client_id' => variable_get('dashboard_connector_client_id'),
     'site_id' => variable_get('dashboard_connector_site_id'),
     'checks' => $checks,
