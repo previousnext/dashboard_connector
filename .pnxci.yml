@@ -1,9 +1,6 @@
 channel: "#dashboard"
 
-config:
-  mem_application: 128
-
-application: previousnext/php5.5
+application: previousnext/lamp
 
 sync_setup: &sync_setup
   # Setup the remote repository.
