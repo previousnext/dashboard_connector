@@ -22,6 +22,11 @@ function dashboard_connector_admin() {
     '#type' => 'textfield',
     '#default_value' => variable_get('dashboard_connector_base_uri'),
     '#description' => t('The base URI for the Dashboard API.'),
+    '#states' => array(
+      'required' => array(
+        ':input[name=dashboard_connector_enabled]' => array('checked' => TRUE),
+      ),
+    ),
   );
   $form['dashboard_connector_client_id'] = array(
     '#title' => t('Client ID'),
@@ -41,7 +46,14 @@ function dashboard_connector_admin() {
     '#type' => 'fieldset',
     '#title' => t('Authentication settings'),
     '#collapsible' => TRUE,
-    '#collapsed' => TRUE,
+    '#states' => array(
+      'collapsed' => array(
+        ':input[name=dashboard_connector_enabled]' => array('checked' => FALSE),
+      ),
+      'expanded' => array(
+        ':input[name=dashboard_connector_enabled]' => array('checked' => TRUE),
+      ),
+    ),
   );
   $form['auth']['dashboard_connector_username'] = array(
     '#title' => t('Username'),
@@ -54,12 +66,30 @@ function dashboard_connector_admin() {
     '#type' => 'password',
     '#description' => t('The password.'),
   );
+  $form['#validate'][] = 'dashboard_connector_admin_validate';
   $form['#submit'][] = 'dashboard_connector_admin_submit';
   return system_settings_form($form);
 }
 
 /**
+ *
  * Form validation handler for dashboard_connector_admin.
+ */
+function dashboard_connector_admin_validate($form, &$form_state) {
+  // If enabled, a URL is mandatory. #states only sets the CSS attribute, so
+  // we must cehck for an actual value here.
+  if (!empty($form_state['values']['dashboard_connector_enabled'])) {
+    if (empty($form_state['values']['dashboard_connector_base_uri'])) {
+      form_set_error('dashboard_connector_base_uri', t('Base URI is required'));
+    }
+    else if (!valid_url($form_state['values']['dashboard_connector_base_uri'], TRUE)) {
+      form_set_error('dashboard_connector_base_uri', t('Base URI must be a valid absolute URL'));
+    }
+  }
+}
+
+/**
+ * Form submission handler for dashboard_connector_admin.
  */
 function dashboard_connector_admin_submit($form, &$form_state) {
   // Ensure whitespace is trimmed.
