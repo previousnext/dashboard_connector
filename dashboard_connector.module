@@ -59,7 +59,7 @@ function dashboard_connector_menu() {
  * Implements hook_cron().
  */
 function dashboard_connector_cron() {
-  if (variable_get('dashboard_connector_enabled', FALSE)) {
+  if (variable_get('dashboard_connector_enabled', FALSE) && variable_get('dashboard_connector_base_uri', FALSE)) {
     watchdog('dashboard_connector', 'Sending checks.');
     dashboard_connector_send();
     watchdog('dashboard_connector', 'Checks sent.');
