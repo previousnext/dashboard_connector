@@ -2,6 +2,20 @@ channel: "#dashboard"
 
 application: previousnext/lamp
 
+prepare: &prepare
+  - composer install --prefer-dist --no-progress
+
+test: &test
+  - vendor/bin/phing build
+
+test_pr:
+  setup: *prepare
+  steps: *test
+
+test_head:
+  setup: *prepare
+  steps: *test
+
 sync_setup: &sync_setup
   # Setup the remote repository.
   - git remote add drupal pnx-bot@git.drupal.org:project/dashboard_connector.git
