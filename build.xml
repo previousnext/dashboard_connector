@@ -8,7 +8,7 @@
   <property name="build.logs.dir" value="${project.basedir}/build/logs" />
   <property name="test.output" value="true" />
   <property name="test.return" value="true" />
-  <property name="app.sniff.exclusions" value="vendor/*" />
+  <property name="app.sniff.exclusions" value="vendor/*,shared/*" />
   <property name="app.sniff.extensions" value="php,module,inc" />
   <property name="app.sniff.ruleset" value="vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml" />
   <property file="build.properties" override="true" />
