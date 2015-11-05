@@ -3,6 +3,12 @@
   "description": "A Dashboard API connector module",
   "type": "drupal-module",
   "license": "proprietary",
+  "require-dev": {
+    "phpunit/phpunit":           "~4.1",
+    "phing/phing":               "~2.6",
+    "squizlabs/php_codesniffer": "~1.4",
+    "drupal/coder":              "~7.2"
+  },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "authors": [

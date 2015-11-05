@@ -83,7 +83,6 @@ function dashboard_connector_admin() {
 }
 
 /**
- *
  * Form validation handler for dashboard_connector_admin.
  */
 function dashboard_connector_admin_validate($form, &$form_state) {
