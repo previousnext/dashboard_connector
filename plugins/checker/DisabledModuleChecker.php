@@ -11,6 +11,7 @@
 class DisabledModuleChecker extends BaseModuleChecker {
 
   protected $modules = array(
+    'php'      => 'error',
     'views_ui' => 'warning',
   );
 
