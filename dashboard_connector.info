@@ -15,3 +15,4 @@ files[] = plugins/checker/ModuleStatusChecker.php
 files[] = plugins/checker/RequirementsChecker.php
 files[] = plugins/checker/ViewsChecker.php
 files[] = plugins/checker/AdminViewsChecker.php
+files[] = plugins/checker/PerformanceChecker.php
