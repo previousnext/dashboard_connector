@@ -20,7 +20,7 @@ class PerformanceChecker implements CheckerInterface {
     $cache = variable_get('cache', 0);
     if (empty($cache)) {
       $checks[] = array(
-        'name'        => t('Page cache'),
+        'name'        => 'cache',
         'description' => t('Cache pages for anonymous users is disabled.'),
         'type'        => 'performance',
         'alert_level' => 'warning',
@@ -31,7 +31,7 @@ class PerformanceChecker implements CheckerInterface {
     $aggregate = variable_get('preprocess_css', 0);
     if (empty($aggregate)) {
       $checks[] = array(
-        'name'        => t('Aggregate CSS'),
+        'name'        => 'preprocess_css',
         'description' => t('CSS aggregation and compression is disabled.'),
         'type'        => 'performance',
         'alert_level' => 'warning',
@@ -42,7 +42,7 @@ class PerformanceChecker implements CheckerInterface {
     $aggregate = variable_get('preprocess_js', 0);
     if (empty($aggregate)) {
       $checks[] = array(
-        'name'        => t('Aggregate JavaScript'),
+        'name'        => 'preprocess_js',
         'description' => t('JavaScript aggregation and compression is disabled.'),
         'type'        => 'performance',
         'alert_level' => 'warning',
