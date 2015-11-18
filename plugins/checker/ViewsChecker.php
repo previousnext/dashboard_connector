@@ -21,8 +21,8 @@ class ViewsChecker implements CheckerInterface {
       foreach ($views as $view) {
         if ($view->type == t('Overridden')) {
           $checks[] = array(
-            'name'        => !empty($view->human_name) ? check_plain($view->human_name) : $view->name,
-            'description' => t('View @name is overridden.', array('@name' => $view->name)),
+            'name'        => $view->name,
+            'description' => t('View @name is overridden.', array('@name' => !empty($view->human_name) ? $view->human_name : $view->name)),
             'type'        => 'views',
             'alert_level' => 'warning',
           );
