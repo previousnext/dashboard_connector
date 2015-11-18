@@ -20,9 +20,9 @@ class AdminViewsChecker implements CheckerInterface {
       $view = views_get_view('admin_views_user');
       $vbo_operations = $view->display['default']->display_options['fields']['views_bulk_operations']['vbo_operations'];
 
-      if (isset($vbo_operations['action::views_bulk_operations_delete'])) {
+      if (isset($vbo_operations['action::views_bulk_operations_delete_item'])) {
         $checks[] = array(
-          'name'        => t('Administration: Users'),
+          'name'        => 'admin_views_user',
           'description' => t('This view exposes the dangerous user delete action.'),
           'type'        => 'views',
           'alert_level' => 'error',
