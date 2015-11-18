@@ -13,7 +13,7 @@ class ThemeChecker implements CheckerInterface {
   /**
    * The current active theme.
    */
-  private $theme = null;
+  private $theme = NULL;
 
   /**
    * The current active theme settings.
@@ -23,7 +23,7 @@ class ThemeChecker implements CheckerInterface {
   /**
    * Constructor.
    */
-  function __construct() {
+  public function __construct() {
     $this->theme = variable_get('theme_default');
     $this->settings = variable_get('theme_' . $this->theme . '_settings', array());
   }
