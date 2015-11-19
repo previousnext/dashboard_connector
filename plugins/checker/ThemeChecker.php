@@ -21,18 +21,13 @@ class ThemeChecker implements CheckerInterface {
   private $settings = array();
 
   /**
-   * Constructor.
-   */
-  public function __construct() {
-    $this->theme = variable_get('theme_default');
-    $this->settings = variable_get('theme_' . $this->theme . '_settings', array());
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function getChecks() {
     $checks = array();
+
+    $this->theme = variable_get('theme_default');
+    $this->settings = variable_get('theme_' . $this->theme . '_settings', array());
 
     // The || should cause the more expensive base theme checking function to
     // not run if the current theme has this setting enabled.
