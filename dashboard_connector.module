@@ -126,7 +126,7 @@ function _dashboard_connector_exclude(&$checks) {
   // description and change its alert level.
   foreach ($checks as &$check) {
     if (!empty($exclude_checks[$check['type']]) && in_array($check['name'], $exclude_checks[$check['type']])) {
-      $check['description'] .= t(' (!alert_level overridden)', array('!alert_level' => $check['alert_level']));
+      $check['description'] .= ' ' . t('(!alert_level overridden)', array('!alert_level' => $check['alert_level']));
       $check['alert_level'] = 'notice';
     }
   }
