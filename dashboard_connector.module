@@ -79,6 +79,7 @@ function dashboard_connector_send() {
     $instance = new $class();
     $checks = array_merge($checks, $instance->getChecks());
   }
+  _dashboard_connector_exclude($checks);
   $snapshot = array(
     'timestamp' => date(DateTime::ISO8601),
     'client_id' => variable_get('dashboard_connector_client_id'),
@@ -110,4 +111,24 @@ function _dashboard_connector_do_send($snapshot) {
   if ($response->code != 204) {
     watchdog('dashboard_connector', 'Failed sending snapshot. HTTP Response: @code', array('@code' => $response->code), WATCHDOG_ERROR);
   }
+}
+
+/**
+ * Remove any checks we don't want to hear about.
+ */
+function _dashboard_connector_exclude(&$checks) {
+  $exclude_checks = variable_get('dashboard_connector_exclude_checks', array());
+  if (empty($exclude_checks) || !is_array($exclude_checks)) {
+    return;
+  }
+
+  // If a check is present in $conf['exclude_checks'], append to its
+  // description and change its alert level.
+  foreach ($checks as &$check) {
+    if (!empty($exclude_checks[$check['type']]) && in_array($check['name'], $exclude_checks[$check['type']])) {
+      $check['description'] .= t(' (!alert_level overridden)', array('!alert_level' => $check['alert_level']));
+      $check['alert_level'] = 'notice';
+    }
+  }
+  reset($checks);
 }
