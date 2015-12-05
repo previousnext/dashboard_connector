@@ -19,3 +19,16 @@ $conf['dashboard_connector_client_id'] = 'local_dev';
 $conf['dashboard_connector_site_id'] = 'local_dev';
 $conf['dashboard_connector_enabled'] = TRUE;
 ```
+
+You can override alerts that you don't want reported as warnings or errors
+by populating the `exclude_checks` array in `settings.php`:
+
+```php
+// Do not output warnings or errors for these checks.
+$conf['dashboard_connector_exclude_checks'] = array(
+  'module enabled' => array('paranoia', 'views_ui'),
+  'performance'    => array('aggregate_css', 'aggregate_js'),
+);
+```
+
+All exclusions are specified as `type => array(name, ...)`.
