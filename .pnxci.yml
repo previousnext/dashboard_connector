@@ -6,7 +6,7 @@ prepare: &prepare
   - composer install --prefer-dist --no-progress
 
 test: &test
-  - vendor/bin/phing build
+  - bin/phing build
 
 test_pr:
   setup: *prepare
