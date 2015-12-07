@@ -8,6 +8,8 @@
   <property name="build.logs.dir" value="${project.basedir}/build/logs" />
   <property name="test.output" value="true" />
   <property name="test.return" value="true" />
+  <property name="app.lint.exclusions" value="vendor/**" />
+  <property name="app.lint.extensions" value="**/*.module, **/*.inc, **/*.php" />
   <property name="app.sniff.exclusions" value="vendor/*,shared/*" />
   <property name="app.sniff.extensions" value="php,module,inc" />
   <property name="app.sniff.ruleset" value="vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml" />
@@ -57,8 +59,15 @@
   <target name="ci:lint"
           description="Find syntax errors in PHP files for the continuous integration server.">
     <phplint>
-      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" excludes="vendor/**" />
+      <fileset dir="${project.basedir}" includes="${app.lint.extensions}" excludes="${app.lint.exclusions}" />
     </phplint>
+  </target>
+
+  <target name="ci:phpunit"
+          description="Runs phpunit tests in format for the continuous integration server.">
+    <exec command="${project.basedir}/bin/phpunit --log-junit ${build.logs.dir}/simpletest/simpletest.log"
+          logoutput="${test.output}"
+          checkreturn="${test.return}" />
   </target>
 
   <target name="phpcs"
@@ -68,6 +77,13 @@
           checkreturn="${test.return}" />
   </target>
 
+  <target name="lint"
+          description="Find syntax errors in PHP files for the continuous integration server.">
+    <phplint>
+      <fileset dir="${project.basedir}" includes="${app.lint.extensions}" excludes="${app.lint.exclusions}" />
+    </phplint>
+  </target>
+
   <target name="phpunit"
           description="Runs phpunit tests in format for human readable output.">
     <exec command="${project.basedir}/bin/phpunit"
@@ -75,18 +91,12 @@
           checkreturn="${test.return}" />
   </target>
 
-  <target name="lint"
-          description="Find syntax errors in PHP files for the continuous integration server.">
-    <phplint>
-      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" excludes="vendor/**" />
-    </phplint>
-  </target>
-
   <!-- This target is the only one run by the CI bot -->
   <target name="build"
           description="Build it">
       <phingcall target="phpcs" />
       <phingcall target="lint" />
+      <phingcall target="phpunit" />
   </target>
 
   <target name="ci:test:pr"
