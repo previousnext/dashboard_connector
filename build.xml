@@ -8,6 +8,8 @@
   <property name="build.logs.dir" value="${project.basedir}/build/logs" />
   <property name="test.output" value="true" />
   <property name="test.return" value="true" />
+  <property name="app.lint.exclusions" value="vendor/**" />
+  <property name="app.lint.extensions" value="**/*.module, **/*.inc, **/*.php" />
   <property name="app.sniff.exclusions" value="vendor/*,shared/*" />
   <property name="app.sniff.extensions" value="php,module,inc" />
   <property name="app.sniff.ruleset" value="vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml" />
@@ -57,20 +59,25 @@
   <target name="ci:lint"
           description="Find syntax errors in PHP files for the continuous integration server.">
     <phplint>
-      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" excludes="vendor/**" />
+      <fileset dir="${project.basedir}" includes="${app.lint.extensions}" excludes="${app.lint.exclusions}" />
     </phplint>
   </target>
 
   <target name="phpcs"
           description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
-    <exec command="${project.basedir}/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
+    <exec command="${project.basedir}/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}" />
+  </target>
+
+  <target name="ci:phpunit"
+          description="Runs phpunit tests in format for the continuous integration server.">
+    <exec command="${project.basedir}/bin/phpunit --log-junit ${build.logs.dir}/simpletest/simpletest.log"
           logoutput="${test.output}"
           checkreturn="${test.return}" />
   </target>
 
-  <target name="phpunit"
-          description="Runs phpunit tests in format for human readable output.">
-    <exec command="${project.basedir}/bin/phpunit"
+  <target name="phpcs"
+          description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
+    <exec command="${project.basedir}/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
           logoutput="${test.output}"
           checkreturn="${test.return}" />
   </target>
@@ -86,8 +93,15 @@
   <target name="lint"
           description="Find syntax errors in PHP files for the continuous integration server.">
     <phplint>
-      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" excludes="vendor/**" />
+      <fileset dir="${project.basedir}" includes="${app.lint.extensions}" excludes="${app.lint.exclusions}" />
     </phplint>
+  </target>
+
+  <target name="phpunit"
+          description="Runs phpunit tests in format for human readable output.">
+    <exec command="${project.basedir}/bin/phpunit"
+          logoutput="${test.output}"
+          checkreturn="${test.return}" />
   </target>
 
   <!-- This target is the only one run by the CI bot -->
@@ -95,6 +109,7 @@
           description="Build it">
       <phingcall target="phpcs" />
       <phingcall target="lint" />
+      <phingcall target="ci:phpunit" />
   </target>
 
   <target name="ci:test:pr"

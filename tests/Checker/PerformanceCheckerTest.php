@@ -43,7 +43,6 @@ namespace PNX\Dashboard\Tests\Checker {
       $this->assertEquals($preprocess_js_check['name'], 'preprocess_js');
       $this->assertEquals($preprocess_js_check['type'], 'performance');
       $this->assertEquals($preprocess_js_check['alert_level'], 'warning');
-
     }
   }
 
@@ -65,7 +64,5 @@ namespace PNX\Dashboard\Tests\Checker {
     protected function t($string, array $args = array(), array $options = array()) {
       return $string;
     }
-
   }
-
 }
