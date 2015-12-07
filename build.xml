@@ -68,6 +68,13 @@
           checkreturn="${test.return}" />
   </target>
 
+  <target name="phpunit"
+          description="Runs phpunit tests in format for human readable output.">
+    <exec command="${project.basedir}/bin/phpunit"
+          logoutput="${test.output}"
+          checkreturn="${test.return}" />
+  </target>
+
   <target name="lint"
           description="Find syntax errors in PHP files for the continuous integration server.">
     <phplint>
