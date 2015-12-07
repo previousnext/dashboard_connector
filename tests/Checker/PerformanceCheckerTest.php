@@ -29,7 +29,6 @@ namespace PNX\Dashboard\Tests\Checker {
       $this->assertEquals($cache_check['type'], 'performance');
       $this->assertEquals($cache_check['alert_level'], 'warning');
 
-
       $blocks_check = $checks[1];
       $this->assertEquals($blocks_check['name'], 'block_cache');
       $this->assertEquals($blocks_check['type'], 'performance');
@@ -40,12 +39,10 @@ namespace PNX\Dashboard\Tests\Checker {
       $this->assertEquals($preprocess_css_check['type'], 'performance');
       $this->assertEquals($preprocess_css_check['alert_level'], 'warning');
 
-
       $preprocess_js_check = $checks[3];
       $this->assertEquals($preprocess_js_check['name'], 'preprocess_js');
       $this->assertEquals($preprocess_js_check['type'], 'performance');
       $this->assertEquals($preprocess_js_check['alert_level'], 'warning');
-
     }
   }
 
@@ -67,7 +64,5 @@ namespace PNX\Dashboard\Tests\Checker {
     protected function t($string, array $args = array(), array $options = array()) {
       return $string;
     }
-
   }
-
 }
