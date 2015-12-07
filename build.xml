@@ -44,11 +44,19 @@
   <target name="ci:test"
           description="A generic (or example) phing target for a test run.">
       <phingcall target="ci:phpcs" />
+      <phingcall target="ci:lint" />
   </target>
 
   <target name="ci:phpcs"
           description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server.">
     <exec command="${project.basedir}/vendor/bin/phpcs --report=checkstyle --report-file=${build.logs.dir}/checkstyle.xml --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
+          logoutput="${test.output}"
+          checkreturn="${test.return}" />
+  </target>
+
+  <target name="ci:lint"
+          description="Find syntax errors in PHP files for the continuous integration server.">
+    <exec command="for file in `find . -name &quot;*.module&quot; -or -name &quot;*.php&quot; -or -name &quot;*.inc&quot; | grep -E -v &quot;(shared|vendor)&quot;`; do /usr/bin/php -l &quot;$file&quot;; done"
           logoutput="${test.output}"
           checkreturn="${test.return}" />
   </target>
@@ -60,21 +68,31 @@
           checkreturn="${test.return}" />
   </target>
 
+  <target name="lint"
+          description="Find syntax errors in PHP files for the continuous integration server.">
+    <exec command="for file in `find . -name &quot;*.module&quot; -or -name &quot;*.php&quot; -or -name &quot;*.inc&quot; | grep -E -v &quot;(shared|vendor)&quot;`; do /usr/bin/php -l &quot;$file&quot;; done"
+          logoutput="${test.output}"
+          checkreturn="${test.return}" />
+  </target>
+
   <!-- This target is the only one run by the CI bot -->
   <target name="build"
           description="Build it">
       <phingcall target="phpcs" />
+      <phingcall target="lint" />
   </target>
 
   <target name="ci:test:pr"
           description="Run CI test suite for PR (short subset of important tests).">
     <phingcall target="ci:prepare" />
     <phingcall target="ci:phpcs" />
+    <phingcall target="ci:lint" />
   </target>
 
   <target name="ci:test:head"
           description="Run CI test suite for HEAD.">
     <phingcall target="ci:prepare" />
     <phingcall target="ci:phpcs" />
+    <phingcall target="ci:lint" />
   </target>
 </project>
