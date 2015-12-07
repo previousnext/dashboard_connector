@@ -28,7 +28,7 @@ class PerformanceChecker implements CheckerInterface {
     }
 
     // Check the block cache.
-    $blocks
+    $blocks = variable_get('block_cache', 0);
     if (empty($blocks)) {
       $checks[] = array(
         'name'        => 'block_cache',
