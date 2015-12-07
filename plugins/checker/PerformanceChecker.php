@@ -92,7 +92,9 @@ class PerformanceChecker implements CheckerInterface {
    *   The translated string.
    */
   protected function t($string, array $args = array(), array $options = array()) {
+    // @codingStandardsIgnoreStart
     return t($string, $args, $options);
+    // @codingStandardsIgnoreEnd
   }
 
 }
