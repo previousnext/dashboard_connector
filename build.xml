@@ -57,7 +57,7 @@
   <target name="ci:lint"
           description="Find syntax errors in PHP files for the continuous integration server.">
     <phplint>
-      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" />
+      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" excludes="vendor/**" />
     </phplint>
   </target>
 
@@ -71,7 +71,7 @@
   <target name="lint"
           description="Find syntax errors in PHP files for the continuous integration server.">
     <phplint>
-      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" />
+      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" excludes="vendor/**" />
     </phplint>
   </target>
 
