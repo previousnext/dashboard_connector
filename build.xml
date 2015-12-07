@@ -49,7 +49,7 @@
 
   <target name="ci:phpcs"
           description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server.">
-    <exec command="${project.basedir}/vendor/bin/phpcs --report=checkstyle --report-file=${build.logs.dir}/checkstyle.xml --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
+    <exec command="${project.basedir}/bin/phpcs --report=checkstyle --report-file=${build.logs.dir}/checkstyle.xml --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
           logoutput="${test.output}"
           checkreturn="${test.return}" />
   </target>
@@ -63,7 +63,7 @@
 
   <target name="phpcs"
           description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
-    <exec command="${project.basedir}/vendor/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
+    <exec command="${project.basedir}/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
           logoutput="${test.output}"
           checkreturn="${test.return}" />
   </target>
