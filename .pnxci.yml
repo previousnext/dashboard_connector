@@ -7,6 +7,9 @@ prepare: &prepare
 
 test: &test
   - vendor/bin/phing build
+  - rm -f /tmp/php-lint
+  - for file in $(find . -name "*.module" -or -name "*.php" -or -name "*.inc" | grep -v vendor); do /usr/bin/php -l "${file}" | tee -a /tmp/php-lint; done
+  - grep -E ^Error /tmp/php-lint || exit 1
 
 test_pr:
   setup: *prepare
