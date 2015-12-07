@@ -56,9 +56,9 @@
 
   <target name="ci:lint"
           description="Find syntax errors in PHP files for the continuous integration server.">
-    <exec command="for file in `find . -name &quot;*.module&quot; -or -name &quot;*.php&quot; -or -name &quot;*.inc&quot; | grep -E -v &quot;(shared|vendor)&quot;`; do /usr/bin/php -l &quot;$file&quot;; done"
-          logoutput="${test.output}"
-          checkreturn="${test.return}" />
+    <phplint>
+      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" />
+    </phplint>
   </target>
 
   <target name="phpcs"
@@ -70,9 +70,9 @@
 
   <target name="lint"
           description="Find syntax errors in PHP files for the continuous integration server.">
-    <exec command="for file in `find . -name &quot;*.module&quot; -or -name &quot;*.php&quot; -or -name &quot;*.inc&quot; | grep -E -v &quot;(shared|vendor)&quot;`; do /usr/bin/php -l &quot;$file&quot;; done"
-          logoutput="${test.output}"
-          checkreturn="${test.return}" />
+    <phplint>
+      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" />
+    </phplint>
   </target>
 
   <!-- This target is the only one run by the CI bot -->
