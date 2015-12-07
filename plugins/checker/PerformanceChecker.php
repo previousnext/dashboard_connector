@@ -92,10 +92,9 @@ class PerformanceChecker implements CheckerInterface {
    *   The translated string.
    */
   protected function t($string, array $args = array(), array $options = array()) {
-    // Push the string onto its own args to placate phpcs. This will work fine
-    // for tests of strings without additional replacements.
-    $args['!string'] = $string;
-    return t('!string', $args, $options);
+    // @codingStandardsIgnoreStart
+    return t($string, $args, $options);
+    // @codingStandardsIgnoreEnd
   }
 
 }
