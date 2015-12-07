@@ -44,6 +44,7 @@
   <target name="ci:test"
           description="A generic (or example) phing target for a test run.">
       <phingcall target="ci:phpcs" />
+      <phingcall target="ci:lint" />
   </target>
 
   <target name="ci:phpcs"
@@ -53,6 +54,13 @@
           checkreturn="${test.return}" />
   </target>
 
+  <target name="ci:lint"
+          description="Find syntax errors in PHP files for the continuous integration server.">
+    <phplint>
+      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" excludes="vendor/**" />
+    </phplint>
+  </target>
+
   <target name="phpcs"
           description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
     <exec command="${project.basedir}/vendor/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
@@ -60,21 +68,31 @@
           checkreturn="${test.return}" />
   </target>
 
+  <target name="lint"
+          description="Find syntax errors in PHP files for the continuous integration server.">
+    <phplint>
+      <fileset dir="${project.basedir}" includes="**/*.module, **/*.inc, **/*.php" excludes="vendor/**" />
+    </phplint>
+  </target>
+
   <!-- This target is the only one run by the CI bot -->
   <target name="build"
           description="Build it">
       <phingcall target="phpcs" />
+      <phingcall target="lint" />
   </target>
 
   <target name="ci:test:pr"
           description="Run CI test suite for PR (short subset of important tests).">
     <phingcall target="ci:prepare" />
     <phingcall target="ci:phpcs" />
+    <phingcall target="ci:lint" />
   </target>
 
   <target name="ci:test:head"
           description="Run CI test suite for HEAD.">
     <phingcall target="ci:prepare" />
     <phingcall target="ci:phpcs" />
+    <phingcall target="ci:lint" />
   </target>
 </project>

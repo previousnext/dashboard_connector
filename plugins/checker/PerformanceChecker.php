@@ -27,6 +27,17 @@ class PerformanceChecker implements CheckerInterface {
       );
     }
 
+    // Check the block cache.
+    $blocks = variable_get('block_cache', 0);
+    if (empty($blocks)) {
+      $checks[] = array(
+        'name'        => 'block_cache',
+        'description' => t('Cache blocks is disabled.'),
+        'type'        => 'performance',
+        'alert_level' => 'warning',
+      );
+    }
+
     // Check CSS aggregation.
     $aggregate = variable_get('preprocess_css', 0);
     if (empty($aggregate)) {
