@@ -9,6 +9,13 @@
     "squizlabs/php_codesniffer": "~1.4",
     "drupal/coder":              "~7.2"
   },
+  "autoload-dev": {
+    "classmap": ["plugins/checker/"],
+    "psr-4": {"PNX\\Dashboard\\Tests\\": ["tests"]}
+  },
+  "config": {
+    "bin-dir": "bin/"
+  },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "authors": [
