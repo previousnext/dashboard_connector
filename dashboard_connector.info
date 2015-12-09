@@ -17,3 +17,4 @@ files[] = plugins/checker/ViewsChecker.php
 files[] = plugins/checker/AdminViewsChecker.php
 files[] = plugins/checker/PerformanceChecker.php
 files[] = plugins/checker/ThemeChecker.php
+files[] = plugins/checker/PHPChecker.php
