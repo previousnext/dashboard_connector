@@ -20,15 +20,16 @@ namespace PNX\Dashboard\Tests\Checker {
     public function testPHPVersion() {
       $checks = array();
 
-      $checker = new StubPHPChecker();
+      // Pass PHP 5.5.
+      $checker = new StubPHPChecker(50500, 1449705058);
       $checks = array_merge($checks, $checker->getChecks());
 
       // Fail PHP 5.4 because it's old.
-      $checker = new StubPHPCheckerFailVersion();
+      $checker = new StubPHPChecker(50400, 1449705058);
       $checks = array_merge($checks, $checker->getChecks());
 
       // Fail PHP 5.6 because it's the future.
-      $checker = new StubPHPCheckerFailTime();
+      $checker = new StubPHPChecker(50600, 1504978442);
       $checks = array_merge($checks, $checker->getChecks());
 
       $this->assertNotEmpty($checks);
@@ -55,19 +56,29 @@ namespace PNX\Dashboard\Tests\Checker {
    */
   class StubPHPChecker extends PHPChecker {
 
+    private $version = 0;
+    private $time    = 0;
+
+    /**
+     * Constructor to set some vars to return.
+     */
+    public function __construct($version = 0, $time = 0) {
+      $this->version = $version;
+      $this->time    = $time;
+    }
+
     /**
      * {@inheritdoc}
      */
     protected function getVersion() {
-      return 50500;
+      return $this->version;
     }
 
     /**
      * {@inheritdoc}
      */
     protected function getTime() {
-      // 10 Dec 2015.
-      return 1449705058;
+      return $this->time;
     }
 
     /**
@@ -75,40 +86,6 @@ namespace PNX\Dashboard\Tests\Checker {
      */
     protected function t($string, array $args = array(), array $options = array()) {
       return $string;
-    }
-  }
-
-  /**
-   * Stubs calls for testing.
-   */
-  class StubPHPCheckerFailVersion extends StubPHPChecker {
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getVersion() {
-      return 50400;
-    }
-  }
-
-  /**
-   * Stubs calls for testing.
-   */
-  class StubPHPCheckerFailTime extends StubPHPChecker {
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getVersion() {
-      return 50600;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function getTime() {
-      // 10 Sep 2017.
-      return 1504978442;
     }
   }
 }
