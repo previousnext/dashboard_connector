@@ -47,6 +47,7 @@
           description="A generic (or example) phing target for a test run.">
       <phingcall target="ci:phpcs" />
       <phingcall target="ci:lint" />
+      <phingcall target="ci:phpunit" />
   </target>
 
   <target name="ci:phpcs"
@@ -63,11 +64,6 @@
     </phplint>
   </target>
 
-  <target name="phpcs"
-          description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
-    <exec command="${project.basedir}/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}" />
-  </target>
-
   <target name="ci:phpunit"
           description="Runs phpunit tests in format for the continuous integration server.">
     <exec command="${project.basedir}/bin/phpunit --log-junit ${build.logs.dir}/simpletest/simpletest.log"
@@ -77,17 +73,7 @@
 
   <target name="phpcs"
           description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
-    <exec command="${project.basedir}/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
-          logoutput="${test.output}"
-          checkreturn="${test.return}" />
-  </target>
-
-  <target name="ci:phpunit"
-          description="Runs phpunit tests in format for CI.">
-    <exec
-        command="${project.basedir}/bin/phpunit --log-junit build/logs/phpunit/phpunit.xml --coverage-html build/logs/coverage"
-        logoutput="${test.output}"
-        checkreturn="${test.return}"/>
+    <exec command="${project.basedir}/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}" />
   </target>
 
   <target name="lint"
@@ -98,18 +84,17 @@
   </target>
 
   <target name="phpunit"
-          description="Runs phpunit tests in format for human readable output.">
-    <exec command="${project.basedir}/bin/phpunit"
-          logoutput="${test.output}"
-          checkreturn="${test.return}" />
+          description="Runs phpunit tests in format for humans.">
+          <exec command="${project.basedir}/bin/phpunit --coverage-text --colors" />
   </target>
+
 
   <!-- This target is the only one run by the CI bot -->
   <target name="build"
           description="Build it">
       <phingcall target="phpcs" />
       <phingcall target="lint" />
-      <phingcall target="ci:phpunit" />
+      <phingcall target="phpunit" />
   </target>
 
   <target name="ci:test:pr"
@@ -117,6 +102,7 @@
     <phingcall target="ci:prepare" />
     <phingcall target="ci:phpcs" />
     <phingcall target="ci:lint" />
+    <phingcall target="ci:phpunit" />
   </target>
 
   <target name="ci:test:head"
@@ -124,5 +110,6 @@
     <phingcall target="ci:prepare" />
     <phingcall target="ci:phpcs" />
     <phingcall target="ci:lint" />
+    <phingcall target="ci:phpunit" />
   </target>
 </project>
