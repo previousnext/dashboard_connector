@@ -25,30 +25,25 @@ class PHPChecker implements CheckerInterface {
    * {@inheritdoc}
    */
   public function getChecks() {
-    $eol = FALSE;
-    $checks = array();
-
-    // Ensure we have all the defines we're looking for, even if running
-    // on a PHP from the stone age.
-    if (!defined('PHP_VERSION_ID')) {
-      $version = explode('.', PHP_VERSION);
-      define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
-    }
+    $eol     = FALSE;
+    $checks  = array();
+    $version = $this->getVersion();
+    $time    = $this->getTime();
 
     // Anything older than 5.5 has been end-of-lifed already.
-    if (PHP_VERSION_ID < 50500) {
+    if ($version < 50500) {
       $eol = TRUE;
     }
     // 5.5 will be EOL 10 Jul 2016.
-    else if (PHP_VERSION_ID < 50600 && time() > 1468108800) {
+    else if ($version < 50600 && $time > 1468108800) {
       $eol = TRUE;
     }
     // 5.6 will be EOL 28 Aug 2017.
-    else if (PHP_VERSION_ID < 70000 && time() > 1503878400) {
+    else if ($version < 70000 && $time > 1503878400) {
       $eol = TRUE;
     }
     // Assuming the next is 7.1, 7.0 will be EOL 3 Dec 2018.
-    else if (PHP_VERSION_ID < 70100 && time() > 1543795200) {
+    else if ($version < 70100 && $time > 1543795200) {
       $eol = TRUE;
     }
 
@@ -70,6 +65,26 @@ class PHPChecker implements CheckerInterface {
     }
 
     return $checks;
+  }
+
+  /**
+   * Proxy for PHP_VERSION_ID to help unit testing.
+   */
+  protected function getVersion() {
+    // Ensure we have all the defines we're looking for, even if running
+    // on a PHP from the stone age.
+    if (!defined('PHP_VERSION_ID')) {
+      $version = explode('.', PHP_VERSION);
+      return ($version[0] * 10000 + $version[1] * 100 + $version[2]);
+    }
+    return PHP_VERSION_ID;
+  }
+
+  /**
+   * Proxy for time() to help unit testing.
+   */
+  protected function getTime() {
+    return time();
   }
 
   /**
