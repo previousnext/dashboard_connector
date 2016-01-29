@@ -1,0 +1,31 @@
+{
+  "name": "previousnext/dashboard_connector",
+  "description": "A Dashboard API connector module",
+  "type": "drupal-module",
+  "license": "proprietary",
+  "require-dev": {
+    "phpunit/phpunit":           "~4.1",
+    "phing/phing":               "~2.6",
+    "squizlabs/php_codesniffer": "~1.4",
+    "drupal/coder":              "~7.2"
+  },
+  "autoload-dev": {
+    "classmap": ["plugins/checker/"],
+    "psr-4": {"PNX\\Dashboard\\Tests\\": ["tests"]}
+  },
+  "config": {
+    "bin-dir": "bin/"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "authors": [
+    {
+      "name": "Kim Pepper",
+      "email": "kim@previousnext.com.au"
+    },
+    {
+      "name": "Lee Rowlands",
+      "email": "lee@previousnext.com.au"
+    }
+  ]
+}

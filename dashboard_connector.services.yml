@@ -1,0 +1,4 @@
+services:
+  plugin.manager.checker_plugin.processor:
+    class: Drupal\dashboard_connector\Plugin\CheckerPluginManager
+    parent: default_plugin_manager
