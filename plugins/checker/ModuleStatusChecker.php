@@ -23,7 +23,7 @@ class ModuleStatusChecker implements CheckerInterface {
       foreach ($modules as $module) {
         $check = array(
           'name' => $module['name'],
-          'description' => $this->getDescription($module['status']),
+          'description' => $this->getDescription($module),
           'type' => 'module',
           'alert_level' => $this->getAlertLevel($module['status']),
         );
@@ -68,56 +68,50 @@ class ModuleStatusChecker implements CheckerInterface {
   /**
    * Provide a human readable description.
    *
-   * @param string $status
-   *   The module status.
+   * @param array $module
+   *   The module status information.
    *
    * @return string
    *   The check message.
    */
-  protected function getDescription($status) {
+  protected function getDescription($module) {
+    $status = $module['status'];
+
     switch ($status) {
       case UPDATE_CURRENT:
-        $message = t('Up to date');
-        break;
-
-      case UPDATE_UNKNOWN:
-        $message = t('No available update data was found for project');
+        $message = t('Up to date') . ' (' . $module['existing_version'] . ')';
         break;
 
       case UPDATE_FETCH_PENDING:
-        $message = t('We need to (re)fetch available update data for this project');
+        $message = t('Fetch Pending');
         break;
 
       case UPDATE_NOT_FETCHED:
-        $message = t('There was a failure fetching available update data for this project');
+        $message = t('Not fetched');
         break;
 
       case UPDATE_NOT_SECURE:
-        $message = t('Project is missing security update(s)');
+        $message = t('Not secure') . ' (' . $module['existing_version'] . ' => ' . $module['latest_version'] . ')';
         break;
 
       case UPDATE_REVOKED:
-        $message = t('Current release has been unpublished and is no longer available');
+      case UPDATE_NOT_SUPPORTED:
+        $message = t('Unsupported') . ' (' . $module['existing_version'] . ')';
         break;
 
       case UPDATE_NOT_CHECKED:
-        $message = t('Project status cannot be checked');
+        $message = t('Not checked');
         break;
 
       case UPDATE_NOT_CURRENT:
-        $message = t('Project has a new release available, but it is not a security release');
-        break;
-
-      case UPDATE_NOT_SUPPORTED:
-        $message = t('Current release is no longer supported by the project maintainer.');
+        $message = t('Not current') . ' (' . $module['existing_version'] . ' => ' . $module['latest_version'] . ')';
         break;
 
       default:
-        $message = t('Cannot determine module status');
+        $message = t('Unknown');
         break;
     }
     return $message;
   }
-
 
 }
