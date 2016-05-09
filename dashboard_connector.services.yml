@@ -1,4 +1,10 @@
 services:
-  plugin.manager.checker_plugin.processor:
+  plugin.manager.dashboard_connector.checker:
     class: Drupal\dashboard_connector\Plugin\CheckerPluginManager
     parent: default_plugin_manager
+  dashboard_connector.snapshot_builder:
+    class: Drupal\dashboard_connector\SnapshotBuilder
+    arguments: ['@plugin.manager.dashboard_connector.checker', '@config.factory']
+  dashboard_connector.connector:
+    class: Drupal\dashboard_connector\DashboardConnector
+    arguments: ['@http_client', '@config.factory']

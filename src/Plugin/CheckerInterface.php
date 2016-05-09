@@ -1,11 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\dashboard_connector\Checker\CheckerInterface
- */
-
-namespace Drupal\dashboard_connector\Checker;
+namespace Drupal\dashboard_connector\Plugin;
 
 /**
  * Provides an interface for status checkers.

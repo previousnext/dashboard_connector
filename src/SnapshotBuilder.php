@@ -1,26 +1,17 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\dashboard_connector\SnapshotBuilder
- */
-
 namespace Drupal\dashboard_connector;
 
+use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\dashboard_connector\Checker\CheckerInterface;
 
 /**
  * Builds a snapshot of checks.
  */
 class SnapshotBuilder implements SnapshotBuilderInterface {
 
-  /**
-   * @var \Drupal\dashboard_connector\Checker\CheckerInterface[]
-   */
-  protected $checkers = [];
-
   protected $config;
+  protected $pluginManager;
 
   /**
    * SnapshotBuilder constructor.
@@ -28,21 +19,9 @@ class SnapshotBuilder implements SnapshotBuilderInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
+  public function __construct(PluginManagerInterface $plugin_manager, ConfigFactoryInterface $config_factory) {
+    $this->pluginManager = $plugin_manager;
     $this->config = $config_factory->get('dashboard_connector.settings');
-  }
-
-  /**
-   * Adds a checker.
-   *
-   * This is typically called by a Service Collector in container
-   * initiliazation.
-   *
-   * @param \Drupal\dashboard_connector\Checker\CheckerInterface $checker
-   *   The checker to add.
-   */
-  public function addChecker(CheckerInterface $checker) {
-    $this->checkers[] = $checker;
   }
 
   /**
@@ -50,13 +29,15 @@ class SnapshotBuilder implements SnapshotBuilderInterface {
    */
   public function buildSnapshot() {
     $checks = [];
-    foreach ($this->checkers as $checker) {
+    foreach ($this->pluginManager->getDefinitions() as $plugin_id => $definition) {
+      $checker = $this->pluginManager->createInstance($plugin_id);
       $checks = array_merge($checks, $checker->getChecks());
     }
+
     $snapshot = [
       'timestamp' => date(\DateTime::ISO8601),
-      'client_id' => variable_get('dashboard_connector_client_id'),
-      'site_id' => variable_get('dashboard_connector_site_id'),
+      'client_id' => $this->config->get('client_id'),
+      'site_id' => $this->config->get('site_id'),
       'checks' => $checks,
     ];
     return $snapshot;

@@ -1,13 +1,9 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\dashboard_connector\DashboardConnector
- */
-
 namespace Drupal\dashboard_connector;
-use Drupal\Core\Config\Config;
+
 use Drupal\Core\Config\ConfigFactoryInterface;
+use GuzzleHttp\ClientInterface;
 
 /**
  * The dashboard connector implementation.
@@ -29,15 +25,20 @@ class DashboardConnector implements DashboardConnectorInterface {
   /**
    * DashboardConnector constructor.
    */
-  public function __construct(ConfigFactoryInterface $config_factory) {
+  public function __construct(ClientInterface $client, ConfigFactoryInterface $config_factory) {
+    $this->client = $client;
     $this->config = $config_factory->get('dashboard_connector.settings');
   }
 
-
-  public function sendSnapshot($snapshot) {
-
-    $this->client->request('POST');
+  /**
+   * {@inheritdoc}
+   */
+  public function sendSnapshot(array $snapshot) {
+    $uri = rtrim($this->config->get('base_uri'), '/') . '/snapshots';
+    $this->client->request('POST', $uri, [
+      'json' => $snapshot,
+      'auth' => [$this->config->get('username'), $this->config->get('password')],
+    ]);
   }
-
 
 }
