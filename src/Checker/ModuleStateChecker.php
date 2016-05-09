@@ -1,6 +1,7 @@
 <?php
 
 namespace Drupal\dashboard_connector\Checker;
+use Drupal\Core\Extension\ModuleHandlerInterface;
 
 /**
  * Checks for modules which should be disabled.
@@ -40,7 +41,20 @@ class ModuleStateChecker implements CheckerInterface {
     'php' => 'error',
     'views_ui' => 'warning',
   ];
+  /**
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
 
+  /**
+   * ModuleStateChecker constructor.
+   *
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler.
+   */
+  public function __construct(ModuleHandlerInterface $module_handler) {
+    $this->moduleHandler = $module_handler;
+  }
 
   /**
    * {@inheritdoc}
@@ -48,13 +62,13 @@ class ModuleStateChecker implements CheckerInterface {
   public function getChecks() {
     $checks = [];
     foreach ($this->disabledModules as $module => $alert_level) {
-      if (\Drupal::moduleHandler()->moduleExists($module) !== static::MODULE_DISABLED) {
+      if ($this->moduleHandler->moduleExists($module) !== static::MODULE_DISABLED) {
         $checks[] = $this->buildCheck('module disabled', sprintf('%s module is enabled', $module), $module, $alert_level);
       }
     }
 
     foreach ($this->enabledModules as $module => $alert_level) {
-      if (\Drupal::moduleHandler()->moduleExists($module) !== static::MODULE_ENABLED) {
+      if ($this->moduleHandler->moduleExists($module) !== static::MODULE_ENABLED) {
         $checks[] = $this->buildCheck('module enabled', sprintf('%s module is disabled', $module), $module, $alert_level);
       }
     }

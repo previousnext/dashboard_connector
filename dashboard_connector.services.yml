@@ -10,5 +10,6 @@ services:
 
   dashboard.checker.module_state:
     class: Drupal\dashboard_connector\Checker\ModuleStateChecker
+    arguments: ['@module_handler']
     tags:
       - { name: dashboard_connector_checker }
