@@ -8,6 +8,8 @@ use Prophecy\Argument;
 
 /**
  * Tests the performance checker plugin.
+ *
+ * @group dashboard_connector
  */
 class PerformanceCheckerTest extends UnitTestCase {
 

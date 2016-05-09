@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Tests the performance checker plugin.
+ *
+ * @group dashboard_connector
  */
 class PhpCheckerTest extends \PHPUnit_Framework_TestCase {
 
