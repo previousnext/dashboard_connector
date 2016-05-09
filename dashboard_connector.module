@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Dashboard connector module file.
+ */
+
+use Drupal\dashboard_connector\Dashboard;
+
+/**
+ * Implements hook_cron().
+ */
+function dashboard_connector_cron() {
+  $config = \Drupal::config('dashboard_connector.settings');
+  if (!$config->get('enabled')) {
+    return;
+  }
+
+  $snapshot = Dashboard::snapshotBuilder()->buildSnapshot();
+  Dashboard::connector()->sendSnapshot($snapshot);
+}

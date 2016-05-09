@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\dashboard_connector\SnapshotBuilder
- */
-
 namespace Drupal\dashboard_connector;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -16,11 +11,14 @@ use Drupal\dashboard_connector\Checker\CheckerInterface;
 class SnapshotBuilder implements SnapshotBuilderInterface {
 
   /**
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
+  protected $config;
+
+  /**
    * @var \Drupal\dashboard_connector\Checker\CheckerInterface[]
    */
   protected $checkers = [];
-
-  protected $config;
 
   /**
    * SnapshotBuilder constructor.
@@ -33,10 +31,7 @@ class SnapshotBuilder implements SnapshotBuilderInterface {
   }
 
   /**
-   * Adds a checker.
-   *
-   * This is typically called by a Service Collector in container
-   * initiliazation.
+   * Adds the checker from the service_collector.
    *
    * @param \Drupal\dashboard_connector\Checker\CheckerInterface $checker
    *   The checker to add.
@@ -53,10 +48,11 @@ class SnapshotBuilder implements SnapshotBuilderInterface {
     foreach ($this->checkers as $checker) {
       $checks = array_merge($checks, $checker->getChecks());
     }
+
     $snapshot = [
       'timestamp' => date(\DateTime::ISO8601),
-      'client_id' => variable_get('dashboard_connector_client_id'),
-      'site_id' => variable_get('dashboard_connector_site_id'),
+      'client_id' => $this->config->get('client_id'),
+      'site_id' => $this->config->get('site_id'),
       'checks' => $checks,
     ];
     return $snapshot;
