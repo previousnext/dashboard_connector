@@ -17,7 +17,6 @@ class RequirementsChecker extends CheckerBase {
    */
   protected $systemManager;
 
-
   /**
    * ModuleStateChecker constructor.
    *
