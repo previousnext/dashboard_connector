@@ -3,12 +3,13 @@
 namespace Drupal\Tests\dashboard_connector\Unit;
 
 use Drupal\dashboard_connector\Checker\PerformanceChecker;
+use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
 
 /**
  * Tests the performance checker plugin.
  */
-class PerformanceCheckerTest extends \PHPUnit_Framework_TestCase {
+class PerformanceCheckerTest extends UnitTestCase {
 
   /**
    * The peformance checker.
@@ -25,9 +26,8 @@ class PerformanceCheckerTest extends \PHPUnit_Framework_TestCase {
 
     $config = $this->prophesize('Drupal\Core\Config\ImmutableConfig');
     $config->get(Argument::any())->willReturn([]);
-    $config_factory = $this->prophesize('Drupal\Core\Config\ConfigFactoryInterface');
-    $config_factory->get(Argument::any())->willReturn($config);
     $translation = $this->prophesize('Drupal\Core\StringTranslation\TranslationInterface');
+    $config_factory = $this->getConfigFactoryStub([]);
     $this->checker = new PerformanceChecker($translation->reveal(), $config_factory->reveal());
   }
 
