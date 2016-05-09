@@ -1,13 +1,14 @@
 <?php
 
 namespace Drupal\dashboard_connector\Checker;
+
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
 
 /**
  * Checks for modules which should be disabled.
- * )
  */
-class ModuleStateChecker implements CheckerInterface {
+class ModuleStateChecker extends CheckerBase {
 
   /**
    * Represents a enabled module state.
@@ -41,6 +42,7 @@ class ModuleStateChecker implements CheckerInterface {
     'php' => 'error',
     'views_ui' => 'warning',
   ];
+
   /**
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
@@ -49,10 +51,13 @@ class ModuleStateChecker implements CheckerInterface {
   /**
    * ModuleStateChecker constructor.
    *
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The translations service.
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler.
    */
-  public function __construct(ModuleHandlerInterface $module_handler) {
+  public function __construct(TranslationInterface $string_translation, ModuleHandlerInterface $module_handler) {
+    parent::__construct($string_translation);
     $this->moduleHandler = $module_handler;
   }
 
@@ -63,33 +68,17 @@ class ModuleStateChecker implements CheckerInterface {
     $checks = [];
     foreach ($this->disabledModules as $module => $alert_level) {
       if ($this->moduleHandler->moduleExists($module) !== static::MODULE_DISABLED) {
-        $checks[] = $this->buildCheck('module disabled', sprintf('%s module is enabled', $module), $module, $alert_level);
+        $checks[] = $this->buildCheck('module disabled', $module, sprintf('%s module is enabled', $module), $alert_level);
       }
     }
 
     foreach ($this->enabledModules as $module => $alert_level) {
       if ($this->moduleHandler->moduleExists($module) !== static::MODULE_ENABLED) {
-        $checks[] = $this->buildCheck('module enabled', sprintf('%s module is disabled', $module), $module, $alert_level);
+        $checks[] = $this->buildCheck('module enabled', $module, sprintf('%s module is disabled', $module), $alert_level);
       }
     }
 
     return $checks;
-  }
-
-  /**
-   * @param $type
-   * @param $description
-   * @param $module
-   * @param $alert_level
-   * @return array
-   */
-  protected function buildCheck($type, $description, $module, $alert_level) {
-    return [
-      'type' => $type,
-      'name' => $module,
-      'description' => $description,
-      'alert_level' => $alert_level,
-    ];
   }
 
 }
