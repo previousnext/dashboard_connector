@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\dashboard_connector\Plugin;
+namespace Drupal\dashboard_connector\Checker;
 
 /**
  * Provides an interface for status checkers.

@@ -2,16 +2,23 @@
 
 namespace Drupal\dashboard_connector;
 
-use Drupal\Component\Plugin\PluginManagerInterface;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\dashboard_connector\Checker\CheckerInterface;
 
 /**
  * Builds a snapshot of checks.
  */
 class SnapshotBuilder implements SnapshotBuilderInterface {
 
+  /**
+   * @var \Drupal\Core\Config\ImmutableConfig
+   */
   protected $config;
-  protected $pluginManager;
+
+  /**
+   * @var \Drupal\dashboard_connector\Checker\CheckerInterface[]
+   */
+  protected $checkers = [];
 
   /**
    * SnapshotBuilder constructor.
@@ -19,9 +26,18 @@ class SnapshotBuilder implements SnapshotBuilderInterface {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
    */
-  public function __construct(PluginManagerInterface $plugin_manager, ConfigFactoryInterface $config_factory) {
-    $this->pluginManager = $plugin_manager;
+  public function __construct(ConfigFactoryInterface $config_factory) {
     $this->config = $config_factory->get('dashboard_connector.settings');
+  }
+
+  /**
+   * Adds the checker from the service_collector.
+   *
+   * @param \Drupal\dashboard_connector\Checker\CheckerInterface $checker
+   *   The checker to add.
+   */
+  public function addChecker(CheckerInterface $checker) {
+    $this->checkers[] = $checker;
   }
 
   /**
@@ -29,8 +45,7 @@ class SnapshotBuilder implements SnapshotBuilderInterface {
    */
   public function buildSnapshot() {
     $checks = [];
-    foreach ($this->pluginManager->getDefinitions() as $plugin_id => $definition) {
-      $checker = $this->pluginManager->createInstance($plugin_id);
+    foreach ($this->checkers as $checker) {
       $checks = array_merge($checks, $checker->getChecks());
     }
 

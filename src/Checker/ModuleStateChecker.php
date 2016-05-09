@@ -1,17 +1,12 @@
 <?php
 
-namespace Drupal\dashboard_connector\Plugin\checker;
-
-use Drupal\dashboard_connector\Plugin\CheckerBase;
+namespace Drupal\dashboard_connector\Checker;
 
 /**
  * Checks for modules which should be disabled.
- *
- * @Checker(
- *   id = "module_state",
  * )
  */
-class ModuleStateChecker extends CheckerBase {
+class ModuleStateChecker implements CheckerInterface {
 
   /**
    * Represents a enabled module state.
