@@ -85,7 +85,7 @@
 
   <target name="phpunit"
           description="Runs phpunit tests in format for humans.">
-          <exec command="${project.basedir}/bin/phpunit --coverage-text --colors" />
+          <exec command="${project.basedir}/bin/phpunit --coverage-text --colors" passthru="true" checkreturn="true" />
   </target>
 
 
