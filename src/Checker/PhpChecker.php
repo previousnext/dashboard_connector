@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @See http://php.net/releases/index.php
  */
-class PHPChecker extends CheckerBase {
+class PhpChecker extends CheckerBase {
 
   /**
    * The request time.
@@ -35,7 +35,7 @@ class PHPChecker extends CheckerBase {
   protected $phpVersion;
 
   /**
-   * PHPChecker constructor.
+   * PhpChecker constructor.
    *
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   The translation service.

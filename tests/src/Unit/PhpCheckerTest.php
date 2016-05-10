@@ -20,15 +20,15 @@ class PhpCheckerTest extends \PHPUnit_Framework_TestCase {
     $checks = [];
 
     // Pass PHP 5.5.
-    $checker = new PHPChecker($translation, $this->getRequestStack(1449705058), 50500);
+    $checker = new PhpChecker($translation, $this->getRequestStack(1449705058), 50500);
     $checks = array_merge($checks, $checker->getChecks());
 
     // Fail PHP 5.4 because it's old.
-    $checker = new PHPChecker($translation, $this->getRequestStack(1449705058), 50400);
+    $checker = new PhpChecker($translation, $this->getRequestStack(1449705058), 50400);
     $checks = array_merge($checks, $checker->getChecks());
 
     // Fail PHP 5.6 because it's the future.
-    $checker = new PHPChecker($translation, $this->getRequestStack(1504978442), 50600);
+    $checker = new PhpChecker($translation, $this->getRequestStack(1504978442), 50600);
     $checks = array_merge($checks, $checker->getChecks());
 
     $this->assertNotEmpty($checks);
