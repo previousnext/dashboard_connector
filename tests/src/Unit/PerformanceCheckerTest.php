@@ -29,8 +29,8 @@ class PerformanceCheckerTest extends UnitTestCase {
     $config = $this->prophesize('Drupal\Core\Config\ImmutableConfig');
     $config->get(Argument::any())->willReturn([]);
     $translation = $this->prophesize('Drupal\Core\StringTranslation\TranslationInterface');
-    $config_factory = $this->getConfigFactoryStub([]);
-    $this->checker = new PerformanceChecker($translation->reveal(), $config_factory->reveal());
+    $config_factory = $this->getConfigFactoryStub(['system.performance' => []]);
+    $this->checker = new PerformanceChecker($translation->reveal(), $config_factory);
   }
 
   /**
