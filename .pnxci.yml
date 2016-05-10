@@ -35,3 +35,12 @@ sync_7_1:
     # Push changes to Drupal.org.
     - git push drupal 7.x-1.x
   teardown: *sync_teardown
+
+sync_8_1:
+  setup: *sync_setup
+  steps:
+    # Update local build before we do anything else.
+    - git rebase drupal/8.x-1.x
+    # Push changes to Drupal.org.
+    - git push drupal 8.x-1.x
+  teardown: *sync_teardown
