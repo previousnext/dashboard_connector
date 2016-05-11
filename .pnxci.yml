@@ -6,7 +6,8 @@ prepare: &prepare
   - composer install --prefer-dist --no-progress
 
 test: &test
-  - bin/phing build
+  # Temporary disable this while we get the tests running.
+  # - bin/phing build
 
 test_pr:
   setup: *prepare
