@@ -32,7 +32,9 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('dashboard_connector.settings');
+    // Go direct to the config factory so we get a mutable object which takes
+    // into account overrides from the settings.php.
+    $config = $this->configFactory->get('dashboard_connector.settings');
     $form['#title'] = $this->t('Dashboard Connector Settings');
 
     $form['config'] = [
