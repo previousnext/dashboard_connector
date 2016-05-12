@@ -1,0 +1,41 @@
+machine:
+  timezone:
+    Australia/Perth
+  php:
+    version: 5.5.11
+  hosts:
+    dashboard-connector.dev: 127.0.0.1
+
+dependencies:
+  cache_directories:
+    - vendor
+    - bin
+  pre:
+    - echo "date.timezone = Australia/Perth" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/timezone.ini
+    # Tell composer to ignore any changes.
+    - composer config --global discard-changes true
+    - echo "memory_limit = 256M" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/memory.ini
+    - composer install --prefer-dist --no-progress
+
+    # Symlink some binaries so they're accessible globally.
+    - ln -s `pwd`/bin/drush /home/ubuntu/bin/drush # WONT WORK
+    - ln -s `pwd`/bin/phing /home/ubuntu/bin/phing
+
+  post:
+    - phing phpcs
+    - phing ci:prepare
+
+test:
+  override:
+    - phing ci:test
+
+deployment:
+  prod:
+    branch: 8.x-1.x
+    commands:
+      - git remote add drupal pnx-bot@git.drupal.org:project/dashboard_connector.git
+      - git fetch drupal
+      - git config --global user.email "admin@previousnext.com.au"
+      - git config --global user.name "PreviousNext"
+      - git rebase drupal/8.x-1.x
+      - git push drupal 8.x-1.x

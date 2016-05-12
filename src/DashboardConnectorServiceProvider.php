@@ -5,6 +5,9 @@ namespace Drupal\dashboard_connector;
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Core\DependencyInjection\ServiceProviderInterface;
 
+/**
+ * Shim in the PHP version into the container.
+ */
 class DashboardConnectorServiceProvider implements ServiceProviderInterface {
 
   /**

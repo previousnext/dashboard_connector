@@ -44,6 +44,8 @@ class ModuleStateChecker extends CheckerBase {
   ];
 
   /**
+   * The moduler handler.
+   *
    * @var \Drupal\Core\Extension\ModuleHandlerInterface
    */
   protected $moduleHandler;

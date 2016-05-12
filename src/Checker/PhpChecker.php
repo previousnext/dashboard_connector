@@ -65,15 +65,15 @@ class PhpChecker extends CheckerBase {
       $eol = TRUE;
     }
     // 5.5 will be EOL 10 Jul 2016.
-    else if ($version < 50600 && $time > 1468108800) {
+    elseif ($version < 50600 && $time > 1468108800) {
       $eol = TRUE;
     }
     // 5.6 will be EOL 28 Aug 2017.
-    else if ($version < 70000 && $time > 1503878400) {
+    elseif ($version < 70000 && $time > 1503878400) {
       $eol = TRUE;
     }
     // Assuming the next is 7.1, 7.0 will be EOL 3 Dec 2018.
-    else if ($version < 70100 && $time > 1543795200) {
+    elseif ($version < 70100 && $time > 1543795200) {
       $eol = TRUE;
     }
 
