@@ -47,6 +47,7 @@ class PhpCheckerTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($fail_time_check['name'], 'version');
     $this->assertEquals($fail_time_check['type'], 'php');
     $this->assertEquals($fail_time_check['alert_level'], 'error');
+    $this->assertTrue(FALSE);
   }
 
   /**
