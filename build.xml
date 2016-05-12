@@ -3,7 +3,7 @@
   <property name="app.sniff.extensions" value="php,module,inc" />
   <property name="app.sniff.ruleset" value="vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml" />
   <property file="build.properties" override="true" />
-  <property name="app.dir"                value="${project.basedir}/app"                              override="true" />
+  <property name="app.dir" value="${project.basedir}/app" override="true" />
 
   <property name="php.bin.php" value="/home/ubuntu/.phpenv/shims/php" />
   <property name="app.uri" value="http://dashboard-connector.dev" />
@@ -12,7 +12,6 @@
   <target name="build">
     <echo message="Nothing to do" />
   </target>
-
 
   <target name="phpcs">
     <exec command="./bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ./" passthru="true" checkreturn="true"/>
