@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\dashboard_connector\Dashboard
- */
-
 namespace Drupal\dashboard_connector;
 
 /**

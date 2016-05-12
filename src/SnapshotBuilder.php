@@ -11,11 +11,15 @@ use Drupal\dashboard_connector\Checker\CheckerInterface;
 class SnapshotBuilder implements SnapshotBuilderInterface {
 
   /**
+   * The dashboard config.
+   *
    * @var \Drupal\Core\Config\ImmutableConfig
    */
   protected $config;
 
   /**
+   * An array of checkers.
+   *
    * @var \Drupal\dashboard_connector\Checker\CheckerInterface[]
    */
   protected $checkers = [];

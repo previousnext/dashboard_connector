@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\dashboard_connector\DashboardConnectorInterface
- */
-
 namespace Drupal\dashboard_connector;
 
 /**
