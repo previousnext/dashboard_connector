@@ -4,7 +4,7 @@ machine:
   php:
     version: 5.5.11
   hosts:
-    dasboard-connector.dev: 127.0.0.1
+    dashboard-connector.dev: 127.0.0.1
 
 dependencies:
   cache_directories:
