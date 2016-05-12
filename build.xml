@@ -21,7 +21,7 @@
   <target name="ci:prepare">
     <exec command="
     wget https://github.com/drupal/drupal/archive/8.1.x.zip &amp;&amp;
-    tar xvzf drupal-8.1.x.zip &amp;&amp;
+    tar xvzf 8.1.x.zip &amp;&amp;
     mv drupal-8.1.x app
     " passthru="true"/>
 
