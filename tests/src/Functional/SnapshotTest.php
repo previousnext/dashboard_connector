@@ -45,7 +45,6 @@ class SnapshotTest extends BrowserTestBase {
         $this->fail(sprintf('The %s check did not exist', $module_name));
       }
     }
-    $this->assertTrue(FALSE);
   }
 
   /**
