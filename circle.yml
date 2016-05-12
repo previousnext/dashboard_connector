@@ -22,11 +22,11 @@ dependencies:
     - ln -s `pwd`/bin/phing /home/ubuntu/bin/phing
 
   post:
+    - phing phpcs
     - phing ci:prepare
 
 test:
   override:
-    - phing phpcs
     - phing ci:test
 
 deployment:
