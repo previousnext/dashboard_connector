@@ -17,22 +17,26 @@
     <exec command="./bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ./" passthru="true" checkreturn="true"/>
   </target>
 
-
   <target name="ci:prepare">
     <exec command="
     wget https://github.com/drupal/drupal/archive/8.1.x.zip &amp;&amp;
-    tar xvzf 8.1.x.zip &amp;&amp;
-    mv drupal-8.1.x app
+    unzip 8.1.x.zip &amp;&amp;
+    mv drupal-8.1.x drupal &amp;&amp;
+    mv drupal/drupal-8.1.x drupal/app &amp;&amp;
+    cd drupal/app &amp;&amp;
+    composer install &amp;&amp;
+    mkdir -p modules/dashboard_connector &amp;&amp;
+    cp -a ../../dashboard_connector.* src tests modules/dashboard_connector/ &amp;&amp;
     " passthru="true"/>
 
-    <mkdir dir="app/sites/simpletest"/>
-    <mkdir dir="app/sites/default/files/tmp"/>
-    <mkdir dir="app/sites/default/files/private"/>
+    <mkdir dir="drupal/app/sites/default/files"/>
+    <mkdir dir="drupal/app/sites/default/files/tmp"/>
+    <mkdir dir="drupal/app/sites/default/files/private"/>
   </target>
 
   <target name="ci:test">
     <echo msg="sudo -u www-data ${php.bin.php} ./core/scripts/run-tests.sh --concurrency 8 --sqlite /tmp/test-db.sqlite --dburl sqlite://localhost//tmp/test-db.sqlite  --php ${php.bin.php} --url ${app.uri}/ --module ${module_name}"/>
-    <exec dir="./app"
+    <exec dir="./drupal/app"
           command="sudo -u www-data ${php.bin.php} ./core/scripts/run-tests.sh --concurrency 8 --sqlite /tmp/test-db.sqlite --dburl sqlite://localhost//tmp/test-db.sqlite  --php ${php.bin.php} --url ${app.uri}/ --module ${module_name}"
           passthru="true"
           checkreturn="true" />
