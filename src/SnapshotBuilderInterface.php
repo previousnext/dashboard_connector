@@ -1,9 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\dashboard_connector\Checker\SnapshotBuilderInterface
- */
 namespace Drupal\dashboard_connector;
 
 /**

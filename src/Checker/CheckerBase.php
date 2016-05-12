@@ -23,6 +23,8 @@ abstract class CheckerBase implements CheckerInterface {
   }
 
   /**
+   * Build an individual check array.
+   *
    * @param string $type
    *   The type of error we're building.
    * @param string $module

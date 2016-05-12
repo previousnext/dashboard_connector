@@ -15,7 +15,7 @@ class PhpCheckerTest extends \PHPUnit_Framework_TestCase {
   /**
    * Tests the php version check.
    */
-  public function testPHPVersion() {
+  public function testPhpVersion() {
     $translation = $this->prophesize('Drupal\Core\StringTranslation\TranslationInterface')->reveal();
     $checks = [];
 
@@ -54,6 +54,7 @@ class PhpCheckerTest extends \PHPUnit_Framework_TestCase {
    *
    * @param int $request_time
    *   The request time of the request.
+   *
    * @return \Symfony\Component\HttpFoundation\RequestStack
    *   The request stack.
    */

@@ -11,6 +11,8 @@ use GuzzleHttp\ClientInterface;
 class DashboardConnector implements DashboardConnectorInterface {
 
   /**
+   * The HTTP Client.
+   *
    * @var \GuzzleHttp\ClientInterface
    */
   protected $client;
