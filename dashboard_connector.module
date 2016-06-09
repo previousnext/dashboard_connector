@@ -84,6 +84,7 @@ function dashboard_connector_send() {
     'timestamp' => date(DateTime::ISO8601),
     'client_id' => variable_get('dashboard_connector_client_id'),
     'site_id' => variable_get('dashboard_connector_site_id'),
+    'env' => variable_get('dashboard_connector_env', 'none'),
     'checks' => $checks,
   );
   _dashboard_connector_do_send($snapshot);
