@@ -35,9 +35,9 @@
   </target>
 
   <target name="ci:test">
-    <echo msg="sudo -u www-data ${php.bin.php} ./core/scripts/run-tests.sh --concurrency 8 --sqlite /tmp/test-db.sqlite --dburl sqlite://localhost//tmp/test-db.sqlite  --php ${php.bin.php} --url ${app.uri}/ --module ${module_name}"/>
+    <echo msg="sudo -u www-data ${php.bin.php} ./scripts/run-tests.sh --concurrency 8 --sqlite /tmp/test-db.sqlite --dburl sqlite://localhost//tmp/test-db.sqlite  --php ${php.bin.php} --url ${app.uri}/ --module ${module_name}"/>
     <exec dir="${app.dir}"
-          command="sudo -u www-data ${php.bin.php} ./core/scripts/run-tests.sh --concurrency 8 --sqlite /tmp/test-db.sqlite --dburl sqlite://localhost//tmp/test-db.sqlite  --php ${php.bin.php} --url ${app.uri}/ --module ${module_name}"
+          command="sudo -u www-data ${php.bin.php} ./scripts/run-tests.sh --concurrency 8 --sqlite /tmp/test-db.sqlite --dburl sqlite://localhost//tmp/test-db.sqlite  --php ${php.bin.php} --url ${app.uri}/ --module ${module_name}"
           passthru="true"
           checkreturn="true" />
   </target>
