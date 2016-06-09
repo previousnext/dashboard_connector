@@ -1,10 +1,9 @@
 #!/usr/bin/make -f
 
-APP=app
 cc_green="\033[0;32m" #Change text to green.
 cc_end="\033[0m" #Change text back to normal.
 
-build: drush-make mkdirs link copy dump-autoload
+build: init lint-php test
 
 lint: lint-sass lint-js lint-php
 
@@ -25,5 +24,5 @@ lint-php:
 
 test:
 	@echo ${cc_green}">>> Running tests..."${cc_end}
-	mkdir -p $CIRCLE_TEST_REPORTS/phpunit
-	bin/phpunit --log-junit $CIRCLE_TEST_REPORTS/phpunit/junit.xml
+	mkdir -p ${CIRCLE_TEST_REPORTS}/phpunit
+	bin/phpunit --log-junit ${CIRCLE_TEST_REPORTS}/phpunit/junit.xml
