@@ -1,115 +1,62 @@
-<!--
-  name: build.xml
-  description: The main project build file for phing operations. This file can
-               be overridden with project specific configuration.
--->
-
 <project name="dashboard_connector" default="build" phingVersion="2.4.11">
-  <property name="build.logs.dir" value="${project.basedir}/build/logs" />
-  <property name="test.output" value="true" />
-  <property name="test.return" value="true" />
-  <property name="app.lint.exclusions" value="vendor/**" />
-  <property name="app.lint.extensions" value="**/*.module, **/*.inc, **/*.php" />
-  <property name="app.sniff.exclusions" value="vendor/*,shared/*" />
+  <property name="app.sniff.exclusions" value="vendor/*" />
   <property name="app.sniff.extensions" value="php,module,inc" />
   <property name="app.sniff.ruleset" value="vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml" />
   <property file="build.properties" override="true" />
+  <property name="app.dir" value="${project.basedir}/app" override="true" />
 
-  <target name="clean"
-          description="Cleanup build artifacts">
-    <delete dir="${build.logs.dir}"/>
+  <property name="php.bin.php" value="/home/ubuntu/.phpenv/shims/php" />
+  <property name="app.uri" value="http://dashboard-connector.dev" />
+  <property name="module_name" value="dashboard_connector" />
+
+  <target name="build">
+    <echo message="Nothing to do" />
   </target>
 
-  <target name="prepare"
-          depends="clean"
-          description="Prepare for build">
-    <!-- Create log directory structure -->
-    <mkdir dir="${build.logs.dir}/checkstyle"/>
-    <mkdir dir="${build.logs.dir}/simpletest"/>
-    <mkdir dir="${build.logs.dir}/behat"/>
-    <mkdir dir="${build.logs.dir}/memory"/>
-
-    <!-- Install common packages -->
-    <exec command="composer install --prefer-dist --dev --no-progress" />
+  <target name="phpcs">
+    <exec command="./bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ./" passthru="true" checkreturn="true"/>
   </target>
 
-  <target name="ci:prepare"
-          description="Prepare the CI environment.">
-    <echo message="Nothing to see here." />
+  <target name="ci:prepare">
+    <exec command="
+    wget https://github.com/drupal/drupal/archive/8.1.x.zip &amp;&amp;
+    unzip 8.1.x.zip &amp;&amp;
+    mv drupal-8.1.x app &amp;&amp;
+    cd app &amp;&amp;
+    composer install &amp;&amp;
+    mkdir -p modules/dashboard_connector &amp;&amp;
+    cp -a ../dashboard_connector.* ../src ../tests modules/dashboard_connector/ &amp;&amp;
+    mkdir -p sites/default/files &amp;&amp;
+    mkdir -p sites/simpletest &amp;&amp;
+    chmod 777 sites/default/files sites/simpletest
+    " passthru="true"/>
+
+    <phingcall target="ci:vhost" />
   </target>
 
-  <target name="drush:init">
-    <echo message="Nothing to init" />
+  <target name="ci:test">
+    <echo msg="sudo -u www-data ${php.bin.php} ./core/scripts/run-tests.sh --concurrency 8 --sqlite /tmp/test-db.sqlite --dburl sqlite://localhost//tmp/test-db.sqlite  --php ${php.bin.php} --url ${app.uri}/ --module ${module_name}"/>
+    <exec dir="${app.dir}"
+          command="sudo -u www-data ${php.bin.php} ./core/scripts/run-tests.sh --concurrency 8 --sqlite /tmp/test-db.sqlite --dburl sqlite://localhost//tmp/test-db.sqlite  --php ${php.bin.php} --url ${app.uri}/ --module ${module_name}"
+          passthru="true"
+          checkreturn="true" />
   </target>
 
-  <!-- This target is the only one run by the CI bot -->
-  <target name="ci:test"
-          description="A generic (or example) phing target for a test run.">
-      <phingcall target="ci:phpcs" />
-      <phingcall target="ci:lint" />
-      <phingcall target="ci:phpunit" />
+  <target name="ci:vhost">
+    <copy file="vhost"
+          tofile="/etc/apache2/sites-available/${phing.project.name}">
+      <filterchain>
+        <replaceregexp>
+          <regexp pattern="##app.uri##" replace="${app.uri}"
+                  ignoreCase="true"/>
+          <regexp pattern="##app.dir##" replace="${app.dir}"
+                  ignoreCase="true"/>
+        </replaceregexp>
+      </filterchain>
+    </copy>
+    <exec command="a2ensite ${phing.project.name}"/>
+    <exec command="a2enmod rewrite"/>
+    <exec command="sudo service apache2 restart"/>
   </target>
 
-  <target name="ci:phpcs"
-          description="Find coding standard violations using PHP_CodeSniffer creating a log file for the continuous integration server.">
-    <exec command="${project.basedir}/bin/phpcs --report=checkstyle --report-file=${build.logs.dir}/checkstyle.xml --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}"
-          logoutput="${test.output}"
-          checkreturn="${test.return}" />
-  </target>
-
-  <target name="ci:lint"
-          description="Find syntax errors in PHP files for the continuous integration server.">
-    <phplint>
-      <fileset dir="${project.basedir}" includes="${app.lint.extensions}" excludes="${app.lint.exclusions}" />
-    </phplint>
-  </target>
-
-  <target name="ci:phpunit"
-          description="Runs phpunit tests in format for the continuous integration server.">
-    <exec command="${project.basedir}/bin/phpunit --log-junit ${build.logs.dir}/simpletest/simpletest.log"
-          logoutput="${test.output}"
-          checkreturn="${test.return}" />
-  </target>
-
-  <target name="phpcs"
-          description="Find coding standard violations using PHP_CodeSniffer and print human readable output. Intended for usage on the command line before committing.">
-    <exec command="${project.basedir}/bin/phpcs --report=full --standard=${app.sniff.ruleset} --extensions=${app.sniff.extensions} --ignore=${app.sniff.exclusions} ${project.basedir}" />
-  </target>
-
-  <target name="lint"
-          description="Find syntax errors in PHP files for the continuous integration server.">
-    <phplint>
-      <fileset dir="${project.basedir}" includes="${app.lint.extensions}" excludes="${app.lint.exclusions}" />
-    </phplint>
-  </target>
-
-  <target name="phpunit"
-          description="Runs phpunit tests in format for humans.">
-          <exec command="${project.basedir}/bin/phpunit --coverage-text --colors" />
-  </target>
-
-
-  <!-- This target is the only one run by the CI bot -->
-  <target name="build"
-          description="Build it">
-      <phingcall target="phpcs" />
-      <phingcall target="lint" />
-      <phingcall target="phpunit" />
-  </target>
-
-  <target name="ci:test:pr"
-          description="Run CI test suite for PR (short subset of important tests).">
-    <phingcall target="ci:prepare" />
-    <phingcall target="ci:phpcs" />
-    <phingcall target="ci:lint" />
-    <phingcall target="ci:phpunit" />
-  </target>
-
-  <target name="ci:test:head"
-          description="Run CI test suite for HEAD.">
-    <phingcall target="ci:prepare" />
-    <phingcall target="ci:phpcs" />
-    <phingcall target="ci:lint" />
-    <phingcall target="ci:phpunit" />
-  </target>
 </project>
