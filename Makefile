@@ -3,9 +3,7 @@
 cc_green="\033[0;32m" #Change text to green.
 cc_end="\033[0m" #Change text back to normal.
 
-build: init lint-php test
-
-lint: lint-sass lint-js lint-php
+build: init lint test
 
 init:
 	@echo ${cc_green}">>> Installing dependencies..."${cc_end}
@@ -13,7 +11,7 @@ init:
 	composer install --prefer-dist --no-progress
 
 
-lint-php:
+lint:
 	@echo ${cc_green}">>> Linting PHP..."${cc_end}
 	bin/phpcs \
 	--report=full \

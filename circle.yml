@@ -16,7 +16,7 @@ dependencies:
     - make init
 
   post:
-    - make lint-php
+    - make lint
 
 test:
   override:
