@@ -20,7 +20,7 @@ lint-php:
 	--report=full \
 	--standard='vendor/drupal/coder/coder_sniffer/Drupal' \
 	--extensions='php,module,inc,install,test,profile,theme' \
-	--ignore='*/vendor/*' \
+	--ignore='vendor/*,bin/*' \
 	.
 
 test:
