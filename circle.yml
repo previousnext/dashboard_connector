@@ -1,0 +1,35 @@
+machine:
+  timezone:
+    Australia/Perth
+  php:
+    version: 5.5.11
+  hosts:
+    dashboard-connector.dev: 127.0.0.1
+
+dependencies:
+  cache_directories:
+    - vendor
+    - bin
+  pre:
+    - echo "date.timezone = Australia/Perth" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/timezone.ini
+    - echo "memory_limit = 256M" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/memory.ini
+    - make init
+
+  post:
+    - make lint
+
+test:
+  override:
+    - make test
+
+deployment:
+  prod:
+    branch: 7.x-1.x
+    commands:
+      - git fetch --unshallow
+      - git remote add drupal pnx-bot@git.drupal.org:project/dashboard_connector.git
+      - git fetch drupal
+      - git config --global user.email "admin@previousnext.com.au"
+      - git config --global user.name "PreviousNext"
+      - git rebase drupal/7.x-1.x
+      - git push drupal 7.x-1.x
