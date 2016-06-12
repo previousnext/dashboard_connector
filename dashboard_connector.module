@@ -70,24 +70,49 @@ function dashboard_connector_cron() {
  * Sends check data to the PNX Dashboard.
  */
 function dashboard_connector_send() {
-  $checks = array();
-  // Collect checks from plugins.
-  ctools_include('plugins');
-  foreach (ctools_get_plugins('dashboard_connector', 'checker') as $id => $plugin) {
-    $class = $plugin['class'];
-    /* @var CheckerInterface $instance */
-    $instance = new $class();
-    $checks = array_merge($checks, $instance->getChecks());
+
+  if (lock_acquire('dashboard_connector', 120)) {
+    $now = time();
+    $last_updated = variable_get('dashboard_connector_last_updated', $now);
+    // Only run every 4 hours, regardless of cron.
+    if ($last_updated > $now - (60 * 60 * 4)) {
+      // We attempt all the updates in a try/catch block so we can ensure the
+      // lock is released in the case of an Exception.
+      try {
+        $checks = array();
+        // Collect checks from plugins.
+        ctools_include('plugins');
+        foreach (ctools_get_plugins('dashboard_connector', 'checker') as $id => $plugin) {
+          $class = $plugin['class'];
+          /* @var CheckerInterface $instance */
+          $instance = new $class();
+          $checks = array_merge($checks, $instance->getChecks());
+        }
+        _dashboard_connector_exclude($checks);
+        $snapshot = array(
+          'timestamp' => date(DateTime::ISO8601),
+          'client_id' => variable_get('dashboard_connector_client_id'),
+          'site_id' => variable_get('dashboard_connector_site_id'),
+          'env' => variable_get('dashboard_connector_env', 'none'),
+          'checks' => $checks,
+        );
+
+        // Send the snapshot.
+        _dashboard_connector_do_send($snapshot);
+
+        // Update the last updated timestamp.
+        variable_set('dashboard_connector_last_updated', $now);
+      }
+      catch (\Exception $e) {
+        // Release the lock.
+        lock_release('dashboard_connector');
+        watchdog_exception('dashboard_connector', $e);
+      }
+    }
   }
-  _dashboard_connector_exclude($checks);
-  $snapshot = array(
-    'timestamp' => date(DateTime::ISO8601),
-    'client_id' => variable_get('dashboard_connector_client_id'),
-    'site_id' => variable_get('dashboard_connector_site_id'),
-    'env' => variable_get('dashboard_connector_env', 'none'),
-    'checks' => $checks,
-  );
-  _dashboard_connector_do_send($snapshot);
+  else {
+    watchdog('dashboard_connector', 'Process already running - could not acquire lock.', [], WATCHDOG_NOTICE);
+  }
 }
 
 /**
