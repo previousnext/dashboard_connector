@@ -73,9 +73,9 @@ function dashboard_connector_send() {
 
   if (lock_acquire('dashboard_connector', 120)) {
     $now = time();
-    $last_updated = variable_get('dashboard_connector_last_updated', $now);
+    $last_updated = variable_get('dashboard_connector_last_updated');
     // Only run every 4 hours, regardless of cron.
-    if ($now - $last_updated > 60 * 60 * 4) {
+    if (!isset($last_updated) || $now - $last_updated > 60 * 60 * 4) {
       // We attempt all the updates in a try/catch block so we can ensure the
       // lock is released in the case of an Exception.
       try {
