@@ -51,6 +51,17 @@ function dashboard_connector_admin() {
       ),
     ),
   );
+  $form['dashboard_connector_env'] = array(
+    '#title' => t('Environment'),
+    '#type' => 'textfield',
+    '#default_value' => variable_get('dashboard_connector_env'),
+    '#description' => t('The environment identifier (e.g. dev, staging, or prod).'),
+    '#states' => array(
+      'required' => array(
+        ':input[name=dashboard_connector_enabled]' => array('checked' => TRUE),
+      ),
+    ),
+  );
 
   // Authentication.
   $form['auth'] = array(
