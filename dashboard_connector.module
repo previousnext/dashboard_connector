@@ -75,7 +75,7 @@ function dashboard_connector_send() {
     $now = time();
     $last_updated = variable_get('dashboard_connector_last_updated', $now);
     // Only run every 4 hours, regardless of cron.
-    if ($last_updated > $now - (60 * 60 * 4)) {
+    if ($now - $last_updated > 60 * 60 * 4) {
       // We attempt all the updates in a try/catch block so we can ensure the
       // lock is released in the case of an Exception.
       try {
@@ -105,10 +105,10 @@ function dashboard_connector_send() {
       }
       catch (\Exception $e) {
         // Release the lock.
-        lock_release('dashboard_connector');
         watchdog_exception('dashboard_connector', $e);
       }
     }
+    lock_release('dashboard_connector');
   }
   else {
     watchdog('dashboard_connector', 'Process already running - could not acquire lock.', [], WATCHDOG_NOTICE);
