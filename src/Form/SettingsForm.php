@@ -67,6 +67,13 @@ class SettingsForm extends ConfigFormBase {
       '#size' => 64,
       '#default_value' => $config->get('site_id'),
     ];
+    $form['config']['env'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Environment'),
+      '#maxlength' => 64,
+      '#size' => 64,
+      '#default_value' => $config->get('env'),
+    ];
 
     // Authentication.
     $form['auth'] = [

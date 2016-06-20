@@ -36,7 +36,9 @@ class ModuleStateChecker extends CheckerBase {
    *
    * @var array
    */
-  protected $disabledModules = [];
+  protected $disabledModules = [
+    'views_ui' => 'warning',
+  ];
 
   /**
    * The moduler handler.
