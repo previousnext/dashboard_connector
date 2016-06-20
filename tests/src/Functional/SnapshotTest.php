@@ -61,12 +61,6 @@ class SnapshotTest extends BrowserTestBase {
         'description' => 'views_ui module is enabled',
         'alert_level' => 'warning',
       ],
-      'paranoia' => [
-        'type' => 'module enabled',
-        'name' => 'paranoia',
-        'description' => 'paranoia module is disabled',
-        'alert_level' => 'error',
-      ],
     ];
   }
 

@@ -39,7 +39,7 @@ class RequirementsChecker extends CheckerBase {
     $requirements = $this->systemManager->listRequirements();
     foreach ($requirements as $requirement) {
       if (isset($requirement['severity']) && $requirement['severity'] === REQUIREMENT_ERROR) {
-        $checks[] = $this->buildCheck('requirement', $requirement['title'], strip_tags($requirement['value'] . ': ' . $requirement['description']), 'error');
+        $checks[] = $this->buildCheck('requirement', $requirement['title'], strip_tags($requirement['value']), 'error');
       }
     }
     return $checks;

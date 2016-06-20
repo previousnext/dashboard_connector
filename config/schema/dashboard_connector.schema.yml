@@ -20,3 +20,6 @@ dashboard_connector.settings:
     site_id:
       type: string
       label: 'The site id'
+    env:
+      type: string
+      label: 'The environment key'
