@@ -29,19 +29,14 @@ class ModuleStateChecker extends CheckerBase {
    *
    * @var array
    */
-  protected $enabledModules = [
-    'paranoia' => 'error',
-  ];
+  protected $enabledModules = [];
 
   /**
    * The disabled modules and their alert levels.
    *
    * @var array
    */
-  protected $disabledModules = [
-    'php' => 'error',
-    'views_ui' => 'warning',
-  ];
+  protected $disabledModules = [];
 
   /**
    * The moduler handler.

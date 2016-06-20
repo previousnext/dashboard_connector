@@ -26,6 +26,7 @@ function dashboard_connector_cron() {
   try {
     $snapshot = Dashboard::snapshotBuilder()->buildSnapshot();
     Dashboard::connector()->sendSnapshot($snapshot);
+    \Drupal::logger('dashboard_connector')->info('Successfully sent status snapshot');
   }
   catch (\Exception $e) {
     watchdog_exception('dashboard_connector', $e);
