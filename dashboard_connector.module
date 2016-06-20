@@ -29,7 +29,8 @@ function dashboard_connector_cron() {
   try {
     $snapshot = Dashboard::snapshotBuilder()->buildSnapshot();
     Dashboard::connector()->sendSnapshot($snapshot);
-  } catch (\Exception $e) {
+  }
+  catch (\Exception $e) {
     watchdog_exception('dashboard_connector', $e);
   }
 
