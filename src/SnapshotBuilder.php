@@ -57,6 +57,7 @@ class SnapshotBuilder implements SnapshotBuilderInterface {
       'timestamp' => date(\DateTime::ISO8601),
       'client_id' => $this->config->get('client_id'),
       'site_id' => $this->config->get('site_id'),
+      'env' => $this->config->get('env'),
       'checks' => $checks,
     ];
     return $snapshot;

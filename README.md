@@ -10,25 +10,15 @@ The module can be configured from `/admin/config/development/pnx-dashboard`
 By default, the module is disabled for development environments to avoid posting
 checks for dev sites.
 
-The recommended approach is to set the `enabled` flag, `client_id` and `site_id`
+The recommended approach is to set the `enabled` flag, `client_id`, `site_id`, and `env`
 via `settings.php`:
 
 ```php
 // Dashboard settings.
-$conf['dashboard_connector_client_id'] = 'local_dev';
-$conf['dashboard_connector_site_id'] = 'local_dev';
-$conf['dashboard_connector_enabled'] = TRUE;
+$config['dashboard_connector.settings']['enabled'] = TRUE;
+$config['dashboard_connector.settings']['base_uri'] = 'https://status.previousnext.com.au';
+$config['dashboard_connector.settings']['client_id'] = 'agov_promo';
+$config['dashboard_connector.settings']['site_id'] = 'agov_promo_' . getenv('SKIPPER_ENV') ?: 'local');
+$config['dashboard_connector.settings']['username'] = skpr_config('dashboard.username') ?: 'connector';
+$config['dashboard_connector.settings']['password'] = skpr_config('dashboard.password') ?: 'secret';
 ```
-
-You can override alerts that you don't want reported as warnings or errors
-by populating the `exclude_checks` array in `settings.php`:
-
-```php
-// Do not output warnings or errors for these checks.
-$conf['dashboard_connector_exclude_checks'] = array(
-  'module enabled' => array('paranoia', 'views_ui'),
-  'performance'    => array('aggregate_css', 'aggregate_js'),
-);
-```
-
-All exclusions are specified as `type => array(name, ...)`.
