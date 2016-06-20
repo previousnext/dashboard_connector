@@ -23,9 +23,6 @@ function dashboard_connector_cron() {
     return;
   }
 
-  $lock = \Drupal::lock();
-  $lock->acquire('dashboard_connector_cron', 120);
-
   try {
     $snapshot = Dashboard::snapshotBuilder()->buildSnapshot();
     Dashboard::connector()->sendSnapshot($snapshot);
@@ -35,5 +32,4 @@ function dashboard_connector_cron() {
   }
 
   $state->set('dashboard_connector_last_updated', time());
-  $lock->release('dashboard_connector_cron');
 }
