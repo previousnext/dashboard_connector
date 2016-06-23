@@ -103,7 +103,7 @@ class SettingsForm extends ConfigFormBase {
     parent::submitForm($form, $form_state);
 
     $config = $this->config('dashboard_connector.settings');
-    foreach ($config->getRawData() as $key => $val) {
+    foreach ($form_state->getValues() as $key => $val) {
       $config->set($key, $form_state->getValue($key));
     }
     $config->save();
