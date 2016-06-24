@@ -61,6 +61,7 @@ class RequirementsChecker extends CheckerBase {
    * Renders an element.
    *
    * @param string|array $element
+   *   The element to be rendered.
    *
    * @return string
    *   A rendered plain text string.
