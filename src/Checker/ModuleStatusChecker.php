@@ -72,7 +72,7 @@ class ModuleStatusChecker extends CheckerBase {
     switch ($status) {
       case UPDATE_CURRENT:
         $message = $this->t('Up to date (existing_version)', [
-          $module['existing_version'],
+          'existing_version' => $module['existing_version'],
         ]);
         break;
 
