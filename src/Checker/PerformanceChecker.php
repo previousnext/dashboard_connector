@@ -37,20 +37,14 @@ class PerformanceChecker extends CheckerBase {
     $checks = [];
     $config = $this->configFactory->get('system.performance');
 
-    // Check the block cache.
-    $blocks = $config->get('block_cache');
-    if (empty($blocks)) {
-      $checks[] = $this->buildCheck('performance', 'block_cache', $this->t('Cache blocks is disabled.'), 'warning');
-    }
-
     // Check CSS aggregation.
-    $aggregate = $config->get('preprocess_css');
+    $aggregate = $config->get('css.preprocess');
     if (empty($aggregate)) {
       $checks[] = $this->buildCheck('performance', 'preprocess_css', $this->t('CSS aggregation and compression is disabled.'), 'warning');
     }
 
     // Check JS aggregation.
-    $aggregate = $config->get('preprocess_js');
+    $aggregate = $config->get('js.preprocess');
     if (empty($aggregate)) {
       $checks[] = $this->buildCheck('performance', 'preprocess_js', $this->t('JavaScript aggregation and compression is disabled.'), 'warning');
     }
