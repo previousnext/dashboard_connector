@@ -48,7 +48,7 @@ class PerformanceCheckerTest extends UnitTestCase {
     $this->assertEquals($preprocess_css_check['type'], 'performance');
     $this->assertEquals($preprocess_css_check['alert_level'], 'warning');
 
-    $preprocess_js_check = $checks[0];
+    $preprocess_js_check = $checks[1];
     $this->assertEquals($preprocess_js_check['name'], 'preprocess_js');
     $this->assertEquals($preprocess_js_check['type'], 'performance');
     $this->assertEquals($preprocess_js_check['alert_level'], 'warning');
