@@ -5,7 +5,6 @@ dashboard_connector.dashboard_connector_settings_form:
     _form: '\Drupal\dashboard_connector\Form\SettingsForm'
     _title: 'SettingsForm'
   requirements:
-    _permission: 'access administration pages'
+    _permission: 'configure dashboard connector settings'
   options:
     _admin_route: TRUE
-
