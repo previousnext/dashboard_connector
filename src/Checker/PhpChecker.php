@@ -56,7 +56,7 @@ class PhpChecker extends CheckerBase {
    */
   public function getChecks() {
     $eol     = FALSE;
-    $checks  = array();
+    $checks  = [];
     $version = $this->phpVersion;
     $time    = $this->time;
 
