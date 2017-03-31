@@ -66,7 +66,7 @@ class ModuleStatusChecker extends CheckerBase {
    * @return string
    *   The check message.
    */
-  protected function getDescription($module) {
+  protected function getDescription(array $module) {
     $status = $module['status'];
 
     switch ($status) {

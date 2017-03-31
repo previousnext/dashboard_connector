@@ -4,4 +4,3 @@ dashboard_connector.dashboard_connector_settings_form:
   description: 'Configuration and settings for the Dashboard Connector'
   parent: system.admin_config_system
   weight: 99
-

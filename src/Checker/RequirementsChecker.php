@@ -45,7 +45,7 @@ class RequirementsChecker extends CheckerBase {
    * {@inheritdoc}
    */
   public function getChecks() {
-    $checks = array();
+    $checks = [];
     // Check run-time requirements and status information.
     $requirements = $this->systemManager->listRequirements();
     foreach ($requirements as $requirement) {

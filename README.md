@@ -19,6 +19,7 @@ $config['dashboard_connector.settings']['enabled'] = TRUE;
 $config['dashboard_connector.settings']['base_uri'] = 'https://status.previousnext.com.au';
 $config['dashboard_connector.settings']['client_id'] = 'agov_promo';
 $config['dashboard_connector.settings']['site_id'] = 'agov_promo_' . getenv('SKIPPER_ENV') ?: 'local');
+$config['dashboard_connector.settings']['env'] = getenv('SKIPPER_ENV');
 $config['dashboard_connector.settings']['username'] = skpr_config('dashboard.username') ?: 'connector';
 $config['dashboard_connector.settings']['password'] = skpr_config('dashboard.password') ?: 'secret';
 ```
