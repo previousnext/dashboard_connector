@@ -1,5 +1,5 @@
 <project name="dashboard_connector" default="build" phingVersion="2.4.11">
-  <property name="app.sniff.exclusions" value="vendor/*" />
+  <property name="app.sniff.exclusions" value="vendor/*,*.md" />
   <property name="app.sniff.extensions" value="php,module,inc" />
   <property name="app.sniff.ruleset" value="vendor/drupal/coder/coder_sniffer/Drupal/ruleset.xml" />
   <property file="build.properties" override="true" />
