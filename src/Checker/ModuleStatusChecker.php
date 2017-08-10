@@ -2,6 +2,9 @@
 
 namespace Drupal\dashboard_connector\Checker;
 
+use Drupal\update\UpdateFetcherInterface;
+use Drupal\update\UpdateManagerInterface;
+
 /**
  * Provides a module status checker.
  */
@@ -40,13 +43,13 @@ class ModuleStatusChecker extends CheckerBase {
    */
   protected function getAlertLevel($status) {
     switch ($status) {
-      case UPDATE_NOT_CURRENT:
+      case UpdateManagerInterface::NOT_CURRENT:
         $alert_level = 'warning';
         break;
 
-      case UPDATE_NOT_SECURE:
-      case UPDATE_NOT_SUPPORTED:
-      case UPDATE_REVOKED:
+      case UpdateManagerInterface::NOT_SECURE:
+      case UpdateManagerInterface::NOT_SUPPORTED:
+      case UpdateManagerInterface::REVOKED:
         $alert_level = 'error';
         break;
 
@@ -70,37 +73,37 @@ class ModuleStatusChecker extends CheckerBase {
     $status = $module['status'];
 
     switch ($status) {
-      case UPDATE_CURRENT:
+      case UpdateManagerInterface::CURRENT:
         $message = $this->t('Up to date (existing_version)', [
           'existing_version' => $module['existing_version'],
         ]);
         break;
 
-      case UPDATE_FETCH_PENDING:
+      case UpdateFetcherInterface::FETCH_PENDING:
         $message = $this->t('Fetch Pending');
         break;
 
-      case UPDATE_NOT_FETCHED:
+      case UpdateFetcherInterface::NOT_FETCHED:
         $message = $this->t('Not fetched');
         break;
 
-      case UPDATE_NOT_SECURE:
+      case UpdateManagerInterface::NOT_SECURE:
         $message = $this->t('Not secure (existing_version => latest_version)', [
           'existing_version' => $module['existing_version'],
           'latest_version' => $module['latest_version'],
         ]);
         break;
 
-      case UPDATE_REVOKED:
-      case UPDATE_NOT_SUPPORTED:
+      case UpdateManagerInterface::REVOKED:
+      case UpdateManagerInterface::NOT_SUPPORTED:
         $message = $this->t('Unsupported (existing_version)', ['existing_version' => $module['existing_version']]);
         break;
 
-      case UPDATE_NOT_CHECKED:
+      case UpdateFetcherInterface::NOT_CHECKED:
         $message = $this->t('Not checked');
         break;
 
-      case UPDATE_NOT_CURRENT:
+      case UpdateManagerInterface::NOT_CURRENT:
         $message = $this->t('Not current (existing_version => latest_version)', [
           'existing_version' => $module['existing_version'],
           'latest_version' => $module['latest_version'],
