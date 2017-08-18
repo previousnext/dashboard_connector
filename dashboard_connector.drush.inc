@@ -8,7 +8,7 @@
 use Drupal\dashboard_connector\Dashboard;
 
 /**
- * Implementation of hook_drush_command().
+ * Implements hook_drush_command().
  */
 function dashboard_connector_drush_command() {
   $items = [];
