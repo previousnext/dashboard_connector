@@ -6,6 +6,7 @@
  */
 
 use Drupal\dashboard_connector\Dashboard;
+use Drush\Log\LogLevel;
 
 /**
  * Implements hook_drush_command().
@@ -26,9 +27,9 @@ function drush_dashboard_connector_dashboard_send() {
   try {
     $snapshot = Dashboard::snapshotBuilder()->buildSnapshot();
     Dashboard::connector()->sendSnapshot($snapshot);
-    \Drupal::logger('dashboard_connector')->info('Successfully sent status snapshot');
+    drush_log(dt('Successfully sent status snapshot'), LogLevel::SUCCESS);
   }
   catch (\Exception $e) {
-    watchdog_exception('dashboard_connector', $e);
+    drush_log(dt('Failed to send snapshot'), LogLevel::ERROR, $e->getMessage());
   }
 }
