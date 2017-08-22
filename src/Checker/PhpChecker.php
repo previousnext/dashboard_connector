@@ -78,10 +78,10 @@ class PhpChecker extends CheckerBase {
     }
 
     if ($eol) {
-      $checks[] = $this->buildCheck('php', 'version', $this->t('PHP version is no longer maintained.', ['version' => PHP_VERSION]), 'error');
+      $checks[] = $this->buildCheck('php', 'version', $this->t('PHP @version is no longer maintained.', ['@version' => PHP_VERSION]), 'error');
     }
     else {
-      $checks[] = $this->buildCheck('php', 'version', $this->t('Running on PHP version.', ['version' => PHP_VERSION]), 'notice');
+      $checks[] = $this->buildCheck('php', 'version', $this->t('Running on PHP @version.', ['@version' => PHP_VERSION]), 'notice');
     }
 
     return $checks;

@@ -74,8 +74,8 @@ class ModuleStatusChecker extends CheckerBase {
 
     switch ($status) {
       case UpdateManagerInterface::CURRENT:
-        $message = $this->t('Up to date (existing_version)', [
-          'existing_version' => $module['existing_version'],
+        $message = $this->t('Up to date (@existing_version)', [
+          '@existing_version' => $module['existing_version'],
         ]);
         break;
 
@@ -88,15 +88,15 @@ class ModuleStatusChecker extends CheckerBase {
         break;
 
       case UpdateManagerInterface::NOT_SECURE:
-        $message = $this->t('Not secure (existing_version => latest_version)', [
-          'existing_version' => $module['existing_version'],
-          'latest_version' => $module['latest_version'],
+        $message = $this->t('Not secure (@existing_version => @latest_version)', [
+          '@existing_version' => $module['existing_version'],
+          '@latest_version' => $module['latest_version'],
         ]);
         break;
 
       case UpdateManagerInterface::REVOKED:
       case UpdateManagerInterface::NOT_SUPPORTED:
-        $message = $this->t('Unsupported (existing_version)', ['existing_version' => $module['existing_version']]);
+        $message = $this->t('Unsupported (@existing_version)', ['@existing_version' => $module['existing_version']]);
         break;
 
       case UpdateFetcherInterface::NOT_CHECKED:
@@ -104,9 +104,9 @@ class ModuleStatusChecker extends CheckerBase {
         break;
 
       case UpdateManagerInterface::NOT_CURRENT:
-        $message = $this->t('Not current (existing_version => latest_version)', [
-          'existing_version' => $module['existing_version'],
-          'latest_version' => $module['latest_version'],
+        $message = $this->t('Not current (@existing_version => @latest_version)', [
+          '@existing_version' => $module['existing_version'],
+          '@latest_version' => $module['latest_version'],
         ]);
         break;
 
