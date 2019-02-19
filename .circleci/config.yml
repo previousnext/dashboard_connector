@@ -73,14 +73,6 @@ jobs:
             --ignore=*.md \
             modules/${MODULE_NAME}
     - run:
-        name: Fetch module dependencies
-        command: |
-          curl -Ls https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 -o /usr/local/bin/jq
-          chmod +x /usr/local/bin/jq
-          cat modules/${MODULE_NAME}/composer.json \
-            | jq '.require | keys[] as $k | "\($k)=\(.[$k])@dev"' \
-            | xargs composer require --no-progress
-    - run:
         name: Install drupal
         command: |
           mkdir -p sites/default/files/tmp sites/default/private
