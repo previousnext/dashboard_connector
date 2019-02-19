@@ -1,8 +1,8 @@
 name: Dashboard Connector
 type: module
-description: Client module for pushing to the PreviousNext Dashboard API
+description: Client module for pushing to the PreviousNext Dashboard API.
 core: 8.x
 package: Custom
 
 dependencies:
-  - update
+  - drupal:update
