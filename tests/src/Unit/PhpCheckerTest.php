@@ -3,6 +3,7 @@
 namespace Drupal\Tests\dashboard_connector\Unit;
 
 use Drupal\dashboard_connector\Checker\PhpChecker;
+use Drupal\Tests\UnitTestCase;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -10,7 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @group dashboard_connector
  */
-class PhpCheckerTest extends \PHPUnit_Framework_TestCase {
+class PhpCheckerTest extends UnitTestCase {
 
   /**
    * Tests the php version check.
