@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\dashboard_connector\Kernel;
 
-use Drupal\Tests\token\Kernel\KernelTestBase;
+use Drupal\KernelTests\KernelTestBase;
 
 /**
  * @coversDefaultClass \Drupal\dashboard_connector\Checker\CoreExtensionChecker
@@ -15,7 +15,7 @@ class CoreExtensionCheckerKernelTest extends KernelTestBase {
    *
    * @var array
    */
-  public static $modules = ['node', 'comment', 'dashboard_connector'];
+  public static $modules = ['system', 'node', 'comment', 'dashboard_connector'];
 
   /**
    * @covers ::getChecks
@@ -30,7 +30,7 @@ class CoreExtensionCheckerKernelTest extends KernelTestBase {
 
     $check = $checks[0];
     $this->assertEquals($check['type'], 'core_module');
-    $this->assertEquals($check['name'], 'path');
+    $this->assertEquals($check['name'], 'system');
     $this->assertEquals($check['description'], 'Enabled module');
     $this->assertEquals($check['alert_level'], 'notice');
 
