@@ -85,7 +85,7 @@ jobs:
     - run:
         name: Run unit tests
         command: |
-          su -m apache -s /bin/bash -c "./vendor/bin/phpunit -c core/phpunit.xml --log-junit build/logs/phpunit/phpunit.xml modules/${MODULE_NAME}"
+          su -m apache -s /bin/bash -c "./vendor/bin/phpunit -c core/phpunit.xml.dist --log-junit build/logs/phpunit/phpunit.xml modules/${MODULE_NAME}"
     - store_test_results:
         path: build/logs
 
