@@ -25,6 +25,7 @@ jobs:
       GIT_MIRROR_URL: git@git.drupal.org:project/dashboard_connector.git
     steps:
     - checkout
+    - add_ssh_keys
     - run:
         name: Add drupal.org git remote
         command: git remote add drupal "${GIT_MIRROR_URL}"
@@ -47,10 +48,10 @@ jobs:
           MYSQL_PASSWORD: drupal
     working_directory: /data/app
     steps:
+    - add_ssh_keys
     - run:
         name: Download specified drupal version
         command: |
-          ssh-keyscan -t rsa -H git.drupal.org >> ~/.ssh/known_hosts
           git clone --depth 1 --branch ${DRUPAL_BRANCH} \
             git@git.drupal.org:project/drupal.git .
     - run:
