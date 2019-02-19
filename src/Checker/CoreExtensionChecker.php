@@ -37,8 +37,10 @@ class CoreExtensionChecker extends CheckerBase {
     $checks = [];
     $extensions = $this->moduleHandler->getModuleList();
     foreach ($extensions as $extension) {
-      $type = $extension->getType();
-      $checks[] = $this->buildCheck("core_$type", $extension->getName(), "Enabled $type", 'notice');
+      if (substr($extension->getPathname(), 0, 4) == 'core') {
+        $type = $extension->getType();
+        $checks[] = $this->buildCheck("core_$type", $extension->getName(),"Enabled $type", 'notice');
+      }
     }
     return $checks;
   }
