@@ -5,7 +5,8 @@ namespace Drupal\Tests\dashboard_connector\Kernel;
 use Drupal\Tests\token\Kernel\KernelTestBase;
 
 /**
- *
+ * @coversDefaultClass \Drupal\dashboard_connector\Checker\CoreExtensionChecker
+ * @group dashboard_connector
  */
 class CoreExtensionCheckerKernelTest extends KernelTestBase {
 
@@ -17,12 +18,8 @@ class CoreExtensionCheckerKernelTest extends KernelTestBase {
   public static $modules = ['node', 'comment', 'dashboard_connector'];
 
   /**
-   * {@inheritdoc}
+   * @covers ::getChecks
    */
-  protected function setUp() {
-    parent::setUp();
-  }
-
   public function testCoreExtensions() {
     /** @var \Drupal\dashboard_connector\Checker\CheckerInterface $coreChecker */
     $coreChecker = \Drupal::service('dashboard.checker.core_extension');
