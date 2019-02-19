@@ -65,12 +65,6 @@ jobs:
     - checkout:
         path: modules/${MODULE_NAME}
     - run:
-        name: Fix permissions
-        command: |
-          mkdir /data/app/sites/simpletest
-          chown -R apache:apache /data
-          chmod 02775 /data/app/sites/simpletest
-    - run:
         name: Lint PHP against Drupal coding standards
         command: |
           vendor/bin/phpcs \
@@ -81,20 +75,20 @@ jobs:
     - run:
         name: Install drupal
         command: |
-          mkdir -p sites/default/files/tmp sites/default/private
-          chmod -R 2775 sites/default/files sites/default/files/tmp sites/default/private sites/simpletest
+          mkdir -p sites/default/files/tmp sites/default/private /data/app/sites/simpletest/browser_output ../build/logs/phpunit
+          chmod -R 2775 sites/default/files sites/default/private sites/simpletest ../build/logs
           vendor/bin/drush -yv site-install minimal --db-url="${SIMPLETEST_DB}"
           vendor/bin/drush -yv en ${MODULE_NAME} simpletest
+          chown -R apache:apache /data
 
     - run: httpd -k restart
     - run:
         name: Run unit tests
         command: |
-          php core/scripts/run-tests.sh --verbose --color \
-            --concurrency 4 \
-            --url "${SIMPLETEST_BASE_URL}" \
-            --dburl "${SIMPLETEST_DB}" \
-            "${MODULE_NAME}"
+          su -m apache -s /bin/bash -c "./bin/phpunit -c core/phpunit.xml --log-junit build/logs/phpunit/phpunit.xml modules/${MODULE_NAME}"
+    - store_test_results:
+        path: build/logs
+
   test_86x:
     <<: *test
     environment:
