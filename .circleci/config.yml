@@ -50,6 +50,7 @@ jobs:
     - run:
         name: Download specified drupal version
         command: |
+          ssh-keyscan -t rsa -H git.drupal.org >> ~/.ssh/known_hosts
           git clone --depth 1 --branch ${DRUPAL_BRANCH} \
             git@git.drupal.org:project/drupal.git .
     - run:
