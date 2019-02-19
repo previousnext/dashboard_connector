@@ -65,6 +65,9 @@ jobs:
     - checkout:
         path: modules/${MODULE_NAME}
     - run:
+        name: Fix permissions
+        command: chown -R /data/app apache:apache
+    - run:
         name: Lint PHP against Drupal coding standards
         command: |
           vendor/bin/phpcs \
