@@ -53,7 +53,7 @@ jobs:
         name: Download specified drupal version
         command: |
           git clone --depth 1 --branch ${DRUPAL_BRANCH} \
-            git@git.drupal.org:project/drupal.git .
+            https://git.drupal.org/project/drupal.git .
     - run:
         name: Fetch drupal dependencies
         command: |
