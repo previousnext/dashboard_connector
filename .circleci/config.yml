@@ -26,6 +26,7 @@ jobs:
     steps:
     - checkout
     - add_ssh_keys
+    - run: ssh-keyscan git.drupal.org >> /root/.ssh/known_hosts
     - run:
         name: Add drupal.org git remote
         command: git remote add drupal "${GIT_MIRROR_URL}"
